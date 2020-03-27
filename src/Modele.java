@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Random;
-
 import javafx.scene.chart.PieChartBuilder;
 import javafx.scene.input.PickResult;
 
@@ -13,6 +12,7 @@ public class Modele {
 	Random r = new Random(10);
 	
 	int pivot = 0; 
+	int vide_j1 = 7;
 	
 	public Modele() {}
 	
@@ -58,44 +58,57 @@ public class Modele {
 	
 	public void first_tirage() {
 			
-			for(int i=0; i<7;i++) {
-				int ran = r.nextInt(pieces.size());
-				j1.add(pieces.get(ran));
-				pieces.remove(ran);
-			}
-			
-			System.out.println(j1);
+		for(int i=0; i<7;i++) {
+			int ran = r.nextInt(pieces.size());
+			j1.add(pieces.get(ran));
+			pieces.remove(ran);
 		}
+		vide_j1 = 0;
+		
+		System.out.println(j1);
+	}
 	
-	public void pioche(char c) {
+	public void echange(char c) {
 		int out = r.nextInt(pieces.size());
 		if(verif_j1(c)) {
 			pieces.add(j1.get(pivot));
 			j1.remove(pivot);
 			j1.add(pieces.get(out));
 		}
+		else {
+			System.out.println("cette lettre ne t'appartient pas");
+		}
 		
 		System.out.println(j1);
 	}
 	
 	public void lettre_poser(char c) {
-		s.remove(c);
+		if(verif_j1(c)) {
+			j1.remove(pivot);
 		}
+		vide_j1 +=1;
+		System.out.println(j1);
+	}
+	
+	public void pioche() {
+		for(int i=0;i<vide_j1;i++) {
+			int out = r.nextInt(pieces.size());
+			j1.add(pieces.get(out));
+			pieces.remove(out);
+		}
+		System.out.println(j1);
+	}
 		
-	
-	
 	
 	public static void main(String[] args) {
 		Modele m = new Modele();
-		System.out.println(m.get_char(0));
-		System.out.println(m.get_remainNbs('a'));
-		m.lettre_poser('a');
-		System.out.println(m.get_remainNbs('a'));
 		m.first_tirage();
-		m.pioche('n');
-		System.out.println(m.pieces);
+		m.lettre_poser('i');
+		m.lettre_poser('p');
+		m.lettre_poser('d');
+		m.lettre_poser('*');
+		m.pioche();
 		
-		
-	}
+		}
 
 }
