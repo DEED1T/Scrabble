@@ -36,10 +36,27 @@ public class Sac {
 		create('*',0,2);
 		}
 	
-	public void create(char c,int pt , int nb){
+	public void create(char c,int pt,int nb){
 		for(int i = 0; i<nb; i++) {
 			Lettre ln = new Lettre(c,pt);
 			s_lettres.add(ln);
 		}
 	}
+	
+	
+	public void remove(char c) {
+		for(int i=0; i<s_lettres.size();i++) {
+			Lettre p = s_lettres.get(i);
+			if(p.ch == c){
+				s_lettres.remove(i);
+				break;
+			}
+		}
+	}
+	
+	public ArrayList<Lettre> get(){
+		return s_lettres;
+	}
+	
+	
 }
