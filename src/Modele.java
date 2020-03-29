@@ -11,8 +11,27 @@ public class Modele {
 	ArrayList<Lettre> j1 = new ArrayList<Lettre>();
 	Random r = new Random(10);
 	
-	int pivot = 0; 
-	int vide_j1 = 7;
+	private int pivot = 0; 
+	public int vide_j1 = 7;
+	
+	private int plateau[][] = { {6,0,0,3,0,0,0,6,0,0,0,3,0,0,6},
+								{0,5,0,0,0,4,0,0,0,4,0,0,0,5,0},
+								{0,0,5,0,0,0,3,0,3,0,0,0,5,0,0},
+								{3,0,0,5,0,0,0,3,0,0,0,5,0,0,3},
+								{0,0,0,0,5,0,0,0,0,0,5,0,0,0,0},
+								{0,4,0,0,0,4,0,0,0,4,0,0,0,4,0},
+								{0,0,3,0,0,0,3,0,3,0,0,0,3,0,0},
+								{6,0,0,3,0,0,0,7,0,0,0,3,0,0,6},
+								{0,0,3,0,0,0,3,0,3,0,0,0,3,0,0},
+								{0,4,0,0,0,4,0,0,0,4,0,0,0,4,0},
+								{0,0,0,0,5,0,0,0,0,0,5,0,0,0,0},
+								{3,0,0,5,0,0,0,3,0,0,0,5,0,0,3},
+								{0,0,5,0,0,0,3,0,3,0,0,0,5,0,0},
+								{0,5,0,0,0,4,0,0,0,4,0,0,0,5,0},
+								{6,0,0,3,0,0,0,6,0,0,0,3,0,0,6}};
+	
+	//				   0         1              2            3            4           5        6        7
+	private enum Id {VIDE,LETTRE_EN_COURS,LETTRE_POSER,LETTREDOUBLE,LETTRETRIPLE,MOTDOUBLE,MOTTRIPLE,CASEDEPART};
 	
 	public Modele() {}
 	
@@ -39,8 +58,6 @@ public class Modele {
 		return cpt;
 	}
 	
-	
-	
 	public boolean verif_j1(char c) {
 		for(int i=0;i<7;i++) {
 			if(c == j1.get(i).ch) {
@@ -52,6 +69,17 @@ public class Modele {
 		return false;
 	}
 	
+	public boolean first_turn() {
+		for(int i=0;i<plateau.length;i++) {
+			for(int j=0;j<plateau.length;j++) {
+				if(Id.values()[plateau[i][j]] == Id.CASEDEPART){
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
 	
 	
 	//--------------------Fonction du jeu----------------------------------
@@ -80,6 +108,10 @@ public class Modele {
 		}
 		
 		System.out.println(j1);
+	}
+	
+	public void echangeAll() {
+		
 	}
 	
 	public void lettre_poser(char c) {
