@@ -16,5 +16,9 @@ public class Lettre{
 		return this.ch +" "+ this.pts;
 	}
 	
+	public int get_P() {
+		return this.pts;
+	}
+	
 	
 }
