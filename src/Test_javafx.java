@@ -1,6 +1,8 @@
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -15,12 +17,12 @@ import javafx.stage.Stage;
 public class Test_javafx extends Application {
 
 	//Dimensions de la fenêtre
-	static int MAP_WIDTH = 300;
-	static int MAP_HEIGHT = 250;
+	static int MAP_WIDTH = 800;
+	static int MAP_HEIGHT = 600;
 	
 	//Dimensions de chaque Tile (Ici, nos cases du Scrabble)
-	static int TILE_WIDTH = 30;
-	static int TILE_HEIGHT = 30;
+	static int TILE_WIDTH = MAP_WIDTH / 20;
+	static int TILE_HEIGHT = MAP_HEIGHT / 20;
 	
     @Override
     public void start(Stage stage) {
@@ -71,9 +73,21 @@ public class Test_javafx extends Application {
         	
         });
         
+        Button btn = new Button();
+        btn.setLayoutX(100);
+        btn.setLayoutY(80);
+        btn.setText("Hello World");
+        btn.setOnAction(new EventHandler<ActionEvent>() {
+
+            public void handle(ActionEvent event) {
+                System.out.println("Hello World");
+            }
+        });
+        
         lbl.setFocusTraversable(true); 
         lbl.setOnKeyPressed(keyEvent -> System.out.printf("Touche enfoncée : %s", keyEvent.getCode()).println());
-        root.getChildren().setAll(lbl);
+        
+        root.getChildren().add(btn);
         
         
     }
