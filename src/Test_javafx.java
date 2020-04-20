@@ -38,6 +38,8 @@ public class Test_javafx extends Application {
         Group root = new Group();
 
         Scene scene = new Scene(root, MAP_WIDTH, MAP_HEIGHT);
+        
+        scene.setFill(Color.AZURE);
 
         Label lbl = new Label("Simple JavaFX application.");
         lbl.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
