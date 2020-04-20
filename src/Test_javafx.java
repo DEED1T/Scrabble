@@ -1,6 +1,7 @@
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -27,22 +28,26 @@ public class Test_javafx extends Application {
     @Override
     public void start(Stage stage) {
 
+    	
         initUI(stage);
+        stage.show();
     }
 
     private void initUI(Stage stage) {
 
-        StackPane root = new StackPane();
+        Group root = new Group();
 
         Scene scene = new Scene(root, MAP_WIDTH, MAP_HEIGHT);
 
         Label lbl = new Label("Simple JavaFX application.");
         lbl.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
+        lbl.setLayoutX(MAP_WIDTH/2 - 100);
+        lbl.setLayoutY(MAP_HEIGHT/2);
+        
         root.getChildren().add(lbl);
 
         stage.setTitle("Simple application");
         stage.setScene(scene);
-        stage.show();
         
         lbl.setOnMouseClicked(new EventHandler<MouseEvent>(){
 
@@ -74,8 +79,8 @@ public class Test_javafx extends Application {
         });
         
         Button btn = new Button();
-        btn.setLayoutX(100);
-        btn.setLayoutY(80);
+        btn.setLayoutX(200);
+        btn.setLayoutY(400);
         btn.setText("Hello World");
         btn.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -97,6 +102,6 @@ public class Test_javafx extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args);
+        Application.launch(args);
     }
 }
