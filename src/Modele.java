@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.function.LongUnaryOperator;
+
 import javafx.scene.chart.PieChartBuilder;
 import javafx.scene.input.PickResult;
 
@@ -7,16 +9,21 @@ public class Modele {
 	
 	Sac s = new Sac();
 	ArrayList<Lettre> pieces = s.get();
+	ArrayList<Lettre> alphabet = s.alphabet();
 	ArrayList<Lettre> j1 = new ArrayList<Lettre>();
 	ArrayList<Lettre> mot_en_cours = new ArrayList<Lettre>();
 	Random r = new Random(10);
+	
+	private enum Id {VIDE,LETTRE_EN_COURS,LETTRE_POSER,LETTREDOUBLE,LETTRETRIPLE,MOTDOUBLE,MOTTRIPLE,CASEDEPART};
 	
 	private int pivot = 0; 
 	private boolean en_cours = false;
 	public int vide_j1 = 7;
 	private int first_i,first_j;
 	private int longeur=0;
-	public int score = 0;
+	public int score_total = 0;
+	public int score_mot = 0;
+	private Id dbtp = Id.VIDE;
 	
 	static private int slots = 7;
 	static private int mod_plateau[][] = { {6,0,0,3,0,0,0,6,0,0,0,3,0,0,6},
@@ -68,7 +75,7 @@ public class Modele {
 									{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'}};
 	
 	//				   0         1              2            3            4           5        6        7
-	private enum Id {VIDE,LETTRE_EN_COURS,LETTRE_POSER,LETTREDOUBLE,LETTRETRIPLE,MOTDOUBLE,MOTTRIPLE,CASEDEPART};
+	
 	
 	public Modele() {}
 	
@@ -128,6 +135,15 @@ public class Modele {
 		return false;
 	}
 	
+	public int get_LettrePts(char c) {
+		for(int i=0;i<alphabet.size();i++) {
+			if(c == alphabet.get(i).ch) {
+				return alphabet.get(i).pts;
+				}
+		}
+		return 0;
+	}
+	
 	public boolean first_turn() {
 		for(int i=0;i<plateau.length;i++) {
 			for(int j=0;j<plateau.length;j++) {
@@ -176,9 +192,29 @@ public class Modele {
 		first_tirage();
 	}
 	
+	public int scoreCase(int ind, int jnd) {
+		int m = 1;
+		if(plateau[ind][jnd] == 3) {
+			m = 2;
+		}
+		else if(plateau[ind][jnd] == 4) {
+			m = 3;
+		}
+		else if(plateau[ind][jnd] == 5) {
+			dbtp = Id.MOTDOUBLE;
+		}
+		else if(plateau[ind][jnd] == 6) {
+			dbtp = Id.MOTTRIPLE;
+		}
+		
+		return m;
+	}
+	
 	public void lettre_poser(char c, int ind, int jnd) {
+		int score_lettre = get_LettrePts(c);
 		
 		if(!en_cours) {
+			score_mot+=score_lettre*scoreCase(ind, jnd);
 			plateau[ind][jnd] = 1;
 			plat_char[ind][jnd] = c;
 			en_cours = true;
@@ -187,6 +223,7 @@ public class Modele {
 			}
 		else {
 			if(ind == first_i || jnd == first_j) {
+				score_mot+=score_lettre*scoreCase(ind, jnd);
 				plateau[ind][jnd] = 1;
 				plat_char[ind][jnd] = c;
 				
@@ -196,7 +233,7 @@ public class Modele {
 			}
 		}
 		
-		if(!(first_turn()) || plateau[ind][jnd] == 2) {
+		if(!(first_turn()) || (plateau[ind+1][jnd]!=2 && plateau[ind-1][jnd]!=2 && plateau[ind][jnd+1]!=2 && plateau[ind][jnd-1]==2)) {
 			if(verif_j1(c)) {
 				mot_en_cours.add(j1.get(pivot));
 				j1.remove(pivot);
@@ -206,7 +243,8 @@ public class Modele {
 			System.out.println(j1);
 		}
 		else {
-			System.out.println("il faut jouer au milieu/jouer sur une lettre deja poser");
+			reset();
+			System.out.println("il faut jouer au milieu");
 		}
 		
 	}
@@ -215,13 +253,20 @@ public class Modele {
 		int cas = 0;
 		boolean mot_juste = false;
 		
+		
+		
+		System.out.println("Longeur "+longeur);
+		
 		while(!mot_juste && !(cas>=4)) {
 			
 			switch(cas) {
 				case 0 :
 					for(int i=first_j;i<first_j+longeur;i++) {
-						
+						if(plateau[first_i][i]==2) {
+							score_mot+=get_LettrePts(plat_char[first_i][i]);
+						}
 						if(plateau[first_i][i]!=1 && plateau[first_i][i]!=2 ) {
+							
 							cas+=1;
 							break;
 						}
@@ -234,8 +279,11 @@ public class Modele {
 					
 				case 1 :
 					for(int i=first_j;i>first_j-longeur;i--) {
-						
+						if(plateau[first_i][i]==2) {
+							score_mot+=get_LettrePts(plat_char[first_i][i]);
+						}
 						if(plateau[first_i][i]!=1 && plateau[first_i][i]!=2) {
+							
 							cas+=1;
 							break;
 						}
@@ -248,7 +296,11 @@ public class Modele {
 					
 				case 2 : 
 					for(int i=first_i;i<first_i+longeur;i++) {
+						if(plateau[i][first_j]==2) {
+							score_mot+=get_LettrePts(plat_char[i][first_j]);
+						}
 						if(plateau[i][first_j]!=1 && plateau[i][first_j]!=2) {
+							
 							cas+=1;
 							break;
 						}
@@ -261,8 +313,11 @@ public class Modele {
 					
 				case 3 :
 					for(int i=first_i;i>first_i-longeur;i--) {
-						
+						if(plateau[i][first_j]==2) {
+							score_mot+=get_LettrePts(plat_char[i][first_j]);
+						}
 						if(plateau[i][first_j]!=1 && plateau[i][first_j]!=2) {
+							
 							cas+=1;
 							break;
 						}
@@ -289,20 +344,37 @@ public class Modele {
 				}
 			}
 			
-			en_cours = false;
-			first_i = 0;
-			first_j = 0;
+			if(dbtp == Id.MOTDOUBLE) {
+				score_mot = score_mot*2;
+				}
+			else if(dbtp == Id.MOTTRIPLE) {
+				score_mot = score_mot*3;
+			}
+			
+			
+			
 		}
 		else {
 			for(int i=0;i<mot_en_cours.size();i++){
 				j1.add(mot_en_cours.get(i));
 			}
-			mot_en_cours.clear();
 			
-			//reset();
+			
+			reset();
 			System.out.println("mot mal dispos�");
 		}
+		
+		mot_en_cours.clear();
+		en_cours = false;
+		first_i = 0;
+		first_j = 0;
+		longeur = 0;
+		score_total+=score_mot;
+		
+		score_mot = 0;
+		dbtp = Id.VIDE;
 		System.out.println(j1);
+		System.out.println("Score "+score_total);
 	}
 	
 	public void reset(){
@@ -327,6 +399,7 @@ public class Modele {
 			j1.add(pieces.get(out));
 			pieces.remove(out);
 		}
+		vide_j1 = 0;
 		System.out.println(j1);
 	}
 		
@@ -340,11 +413,17 @@ public class Modele {
 		m.lettre_poser('n', 7, 4);
 		m.mot_fini();
 		m.pioche();
-		m.lettre_poser('j', 1, 1);
+		m.lettre_poser('j', 5, 5);
+		m.lettre_poser('z', 6, 5);
+		m.lettre_poser('i', 8, 5);
+		m.mot_fini();
+		m.pioche();
+		/*m.lettre_poser('j', 1, 1);
 		m.lettre_poser('z', 1, 2);
 		m.lettre_poser('i', 1, 3);
 		m.mot_fini();
-
+		m.pioche();*/
+	
 		m.print_plateau();
 		System.out.println();
 		m.print_charplat();
