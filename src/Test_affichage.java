@@ -72,12 +72,14 @@ public class Test_affichage extends Application{
 		Image case_depart = new Image("Scrabble_images/Depart.png");
 		
 		Image TabImage[] = {case_vide, null, null, lettre_x2, lettre_x3, mot_x2, mot_x3, case_depart};
-		Image TabImageLettres[] = new Image[alphabet.length];
+		Image TabImageLettres[] = new Image[alphabet.length + 1];
 		
 		for(int image = 0; image < alphabet.length; image++) {
 			Image image_lettre = new Image("Scrabble_images/" + alphabet[image] + ".png");
 			TabImageLettres[image] = image_lettre;
 		}
+		
+		TabImageLettres[TabImageLettres.length - 1] = jocker;
 		
 		
 		for(int ligne = 0; ligne < MAP_HEIGHT; ligne++) {
