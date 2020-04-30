@@ -126,14 +126,6 @@ public class Test_affichage extends Application{
         	
         });
 		
-		
-		Rectangle affichage_lettre_joueur = new Rectangle();
-		affichage_lettre_joueur.setWidth(200);
-		affichage_lettre_joueur.setHeight(100);
-		affichage_lettre_joueur.setArcHeight(30);
-		affichage_lettre_joueur.setArcWidth(30);
-		affichage_lettre_joueur.setFill(Color.BLACK);
-		
         stage.show();
 	}
 	
