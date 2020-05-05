@@ -205,7 +205,7 @@ public class Modele {
 		return m;
 	}
 	
-	public void lettre_poser(char c, int ind, int jnd) {
+	public void lettre_poser(char c, int ind, int jnd) throws ExceptionDisposition {
 		int score_lettre = get_LettrePts(c);
 		
 		if(!en_cours) {
@@ -215,6 +215,7 @@ public class Modele {
 			en_cours = true;
 			first_i=ind;
 			first_j=jnd;
+			
 			}
 		else {
 			if(ind == first_i || jnd == first_j) {
@@ -240,21 +241,26 @@ public class Modele {
 		}
 		else {
 			reset();
-			System.out.println("il faut jouer au milieu");
+			throw new ExceptionDisposition();
 		}
 		
 	}
 	
-	public void mot_fini() {
+	public void mot_fini() throws ExceptionDisposition {
 		int cas = 0;
 		mot_juste = false;
+		int long_base = longeur;
+		boolean dis = false;
 		
 		while(!mot_juste && !(cas>=4)) {
 			switch(cas) {
 				case 0 :
+					if(first_j+1>=plateau[0].length) {
+						cas+=1;
+						break;
+						}
 					for(int i=first_j;i<first_j+longeur;i++) {
 						if(plateau[first_i][i]==2) {
-							
 							score_mot+=get_LettrePts(plat_char[first_i][i]);
 							longeur+=1;
 						}
@@ -268,10 +274,13 @@ public class Modele {
 					}
 					break;
 				case 1 :
+					if(first_j<=0) {
+						cas+=1;
+						break;
+						}
 					for(int i=first_j;i>first_j-longeur;i--) {
 						
 						if(plateau[first_i][i]==2) {
-							
 							score_mot+=get_LettrePts(plat_char[first_i][i]);
 							longeur+=1;
 						}
@@ -285,9 +294,12 @@ public class Modele {
 					}
 					break;
 				case 2 : 
+					if(first_i+1>=plateau.length) {
+						cas+=1;
+						break;
+					}
 					for(int i=first_i;i<first_i+longeur;i++) {
 						if(plateau[i][first_j]==2) {
-							
 							score_mot+=get_LettrePts(plat_char[i][first_j]);
 							longeur+=1;
 						}
@@ -301,9 +313,12 @@ public class Modele {
 					}
 					break;
 				case 3 :
+					if(first_i<=0) {
+						cas+=1;
+						break;
+					}
 					for(int i=first_i;i>first_i-longeur;i--) {
 						if(plateau[i][first_j]==2) {
-							
 							score_mot+=get_LettrePts(plat_char[i][first_j]);
 							longeur+=1;
 						}
@@ -318,8 +333,11 @@ public class Modele {
 					break;
 			}
 		}
+		if(round !=1) {
+			dis = (long_base == longeur);
+		}
 		
-		if(mot_juste) {
+		if(mot_juste && !dis) {
 			
 			for(int i=0;i<plateau.length;i++) {
 				for(int j=0;j<plateau.length;j++) {
@@ -342,7 +360,7 @@ public class Modele {
 				j1.add(mot_en_cours.get(i));
 			}
 			reset();
-			System.out.println("mot mal dispos�");
+			throw new ExceptionDisposition();
 		}
 		
 		mot_en_cours.clear();
@@ -373,7 +391,8 @@ public class Modele {
 		plateau = mod_plateau;
 		round = 0;
 	}
-
+	
+	
 	public void pioche() {
 		if(mot_juste) {
 			if(pieces.size()>= 7) {
@@ -401,7 +420,7 @@ public class Modele {
 		System.out.println(j1);
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ExceptionDisposition {
 		Modele m = new Modele();
 		m.first_tirage();
 		m.lettre_poser('p', 7, 7);
@@ -425,10 +444,10 @@ public class Modele {
 		m.lettre_poser('a', 8, 7);
 		m.mot_fini();
 		m.pioche();
-		m.lettre_poser('u', 1, 1);
-		m.lettre_poser('m', 1, 1);
-		m.lettre_poser('r', 2, 1);
-		m.lettre_poser('e', 3, 1);
+		m.lettre_poser('u', 3, 2);
+		m.lettre_poser('m', 4, 2);
+		m.lettre_poser('r', 5, 2);
+		m.lettre_poser('e', 6, 2);
 		m.mot_fini();
 		m.pioche();
 		
