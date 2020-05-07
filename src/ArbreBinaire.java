@@ -12,9 +12,9 @@ public class ArbreBinaire<E> implements Iterable<E> {
 		
 		ArrayDeque<ArbreBinaire<E>> f;
 		
-		public ABIterateur(ArbreBinaire ab) {
-			ArrayDeque f = new ArrayDeque();
-			f.add(ab);
+		public ABIterateur(ArbreBinaire<E> ab) {
+			ArrayDeque<E> f = new ArrayDeque<E>();
+			f.add((E) ab);
 		}
 		
 		@Override
@@ -27,7 +27,7 @@ public class ArbreBinaire<E> implements Iterable<E> {
 
 		@Override
 		public E next() {
-			ArbreBinaire ab = f.poll();
+			ArbreBinaire<E> ab = f.poll();
 			if(!ab.est_vide()) {
 				
 			
@@ -104,7 +104,7 @@ public class ArbreBinaire<E> implements Iterable<E> {
 		}
 	}
 	
-	public ArbreBinaire parcoursProfondeurInfixe() {
+	public ArbreBinaire<E> parcoursProfondeurInfixe() {
 		
 		if (!(this.fg.est_vide())) {
 			this.fg.parcoursProfondeurInfixe();
@@ -120,12 +120,12 @@ public class ArbreBinaire<E> implements Iterable<E> {
 	}
 	
 	public ArrayList<E> parcoursLargeur(){
-		ArbreBinaire<E> a = new ArbreBinaire();
-		ArrayList<E> l  = new ArrayList();
-		ArrayDeque<ArbreBinaire> f = new ArrayDeque();
+		ArbreBinaire<E> a = new ArbreBinaire<E>();
+		ArrayList<E> l  = new ArrayList<E>();
+		ArrayDeque<ArbreBinaire<E>> f = new ArrayDeque<ArbreBinaire<E>>();
 		f.add(this);
 		while(!(f.isEmpty())) {
-			a = (ArbreBinaire) f.getFirst();
+			a = (ArbreBinaire<E>) f.getFirst();
 			f.remove();
 			if (!(a.est_vide())) {
 				l.add((E) a.racine());

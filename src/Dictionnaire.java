@@ -7,16 +7,17 @@ import java.io.IOException;
 public class Dictionnaire<E extends Comparable<String>> extends ArbreBinaire<String> {
 	
 	public Dictionnaire()  {
+		super();
 		String dico1 = "src/Dico/dico_a-g.txt";
 		String dico2 = "src/Dico/dico_h-z.txt";
 		
 		try {
 			BufferedReader br1 = new BufferedReader(new FileReader(dico1));
-			BufferedReader br2 = new BufferedReader(new FileReader(dico1));
+			BufferedReader br2 = new BufferedReader(new FileReader(dico2));
 			String lignebr1;
 			String lignebr2;
 			while(((lignebr1 = br1.readLine()) != null)&&((lignebr2 = br2.readLine()) != null)) {
-				this.inserer((String) lignebr2);
+				this.inserer((String) lignebr1);
 				this.inserer((String) lignebr2);
 			}
 			
@@ -66,7 +67,7 @@ public class Dictionnaire<E extends Comparable<String>> extends ArbreBinaire<Str
 	}
 	
 	public static void main(String[] args) {
-		Dictionnaire<Comparable<String>> d = new Dictionnaire<Comparable<String>>();
+		Dictionnaire<String> d = new Dictionnaire<String>();
 		
 		
 		
