@@ -1,19 +1,31 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.stream.Stream;
 
 @SuppressWarnings("hiding")
 public class Dictionnaire<E extends Comparable<String>> extends ArbreBinaire<String> {
 	
-	public Dictionnaire() {
-		super();
+	public Dictionnaire()  {
 		String dico1 = "src/Dico/dico_a-g.txt";
 		String dico2 = "src/Dico/dico_h-z.txt";
 		
+		try {
+			BufferedReader br1 = new BufferedReader(new FileReader(dico1));
+			BufferedReader br2 = new BufferedReader(new FileReader(dico1));
+			String lignebr1;
+			String lignebr2;
+			while(((lignebr1 = br1.readLine()) != null)&&((lignebr2 = br2.readLine()) != null)) {
+				this.inserer((String) lignebr2);
+				this.inserer((String) lignebr2);
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		
-	}
+		}
 	
 	public void inserer(String e) {
 		if(this.est_vide()) {
