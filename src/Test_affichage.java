@@ -101,7 +101,7 @@ public class Test_affichage extends Application{
 			
 		}
 		
-		scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+		/*scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent recup_coord) {
@@ -129,7 +129,7 @@ public class Test_affichage extends Application{
 				}
 			}
         	
-        });
+        });*/
 		
         stage.show();
         
@@ -198,7 +198,7 @@ public class Test_affichage extends Application{
         	}
         	System.out.println();
         }
-        
+               
         jscene.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
@@ -212,12 +212,33 @@ public class Test_affichage extends Application{
 					
 					Lettre id = tabsLettres[ligne][colonne];
 					System.out.println(id.ch);
+					
+					scene.setOnMouseClicked(new EventHandler<MouseEvent>(){
+
+						@Override
+						public void handle(MouseEvent event) {
+							int x2 = (int)event.getX();
+							int y2 = (int)event.getY();
+							int col = (int) (Math.floor(x2 / TILE_WIDTH) + 1);
+							int lig = (int) (Math.floor(y2 / TILE_HEIGHT) + 1);
+							int id2 = mod_plateau[lig - 1][col - 1];
+							System.out.println("Case ID : " + id2);
+							Random image_random = new Random();
+							ImageView test = new ImageView("Scrabble_images/" + id.ch + ".png");
+							test.setFitWidth(TILE_WIDTH);
+							test.setFitHeight(TILE_HEIGHT);
+							test.setLayoutX( (col-1) * TILE_WIDTH );
+							test.setLayoutY( (lig-1) * TILE_HEIGHT );
+							root.getChildren().add(test);
+							
+						}
+						
+					});
 				}
 				
 			}
         	
         });
-        
         
         joueur.setTitle("main joueurs");
         joueur.setScene(jscene);
