@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.function.LongUnaryOperator;
-
 import javafx.scene.chart.PieChartBuilder;
 import javafx.scene.input.PickResult;
+
 
 public class Modele {
 	
@@ -26,7 +26,7 @@ public class Modele {
 	public int score_total = 0;
 	public int score_mot = 0;
 	private Id dbtp = Id.VIDE;
-	private int round = 0;
+	public int round = 0;
 	
 	static private int slots = 7;
 	static private int mod_plateau[][] = { {6,0,0,3,0,0,0,6,0,0,0,3,0,0,6},
