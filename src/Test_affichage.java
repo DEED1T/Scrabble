@@ -199,6 +199,25 @@ public class Test_affichage extends Application{
         	System.out.println();
         }
         
+        jscene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				if(event.getTarget().getClass() == ImageView.class) {
+					int x = (int)event.getX();
+					int y = (int)event.getY();
+					
+					int colonne = (int) (x / TILE_WIDTH);
+					int ligne = (int) (y / (30 + TILE_HEIGHT));
+					
+					Lettre id = tabsLettres[ligne][colonne];
+					System.out.println(id.ch);
+				}
+				
+			}
+        	
+        });
+        
         
         joueur.setTitle("main joueurs");
         joueur.setScene(jscene);
