@@ -59,5 +59,8 @@ public class FeuilleTestSc {
 		m.lettre_poser('e', 6, 2);
 		m.mot_fini();
 	}
+	
+	
+	
 
 }
