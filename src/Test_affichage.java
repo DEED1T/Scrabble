@@ -2,9 +2,12 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
@@ -48,9 +51,9 @@ public class Test_affichage extends Application{
 			{6,0,0,3,0,0,0,6,0,0,0,3,0,0,6}};
 
 	public static void main(String[] args) {
-        Application.launch(Test_affichage.class, args);
-        System.out.println(TILE_WIDTH + " " + TILE_HEIGHT);
-        System.out.println(screenWidth + " " + screenHeight);
+        Application.launch(Test_affichage.class, args);     
+        //System.out.println(TILE_WIDTH + " " + TILE_HEIGHT);
+        //System.out.println(screenWidth + " " + screenHeight);
     }
 	
 	@Override
@@ -98,7 +101,7 @@ public class Test_affichage extends Application{
 			
 		}
 		
-		scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+		/*scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent recup_coord) {
@@ -126,9 +129,121 @@ public class Test_affichage extends Application{
 				}
 			}
         	
-        });
+        });*/
 		
         stage.show();
+        
+        // main joueur
+        
+        int nbJoueurs = 4; // temporaire, à remplacer par le nombre de joueurs
+        
+        Group jroot = new Group();
+        Scene jscene = new Scene(jroot, TILE_WIDTH*7, (TILE_HEIGHT+30)*nbJoueurs);  
+        jscene.setFill(Color.AZURE);
+        
+        Stage joueur = new Stage();
+        
+        Lettre[][] tabsLettres= new Lettre[nbJoueurs][7];
+        
+        //labels
+        
+        Label lbl1 = new Label("main joueur 1:");
+        lbl1.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
+        lbl1.setTranslateY((TILE_HEIGHT+30)*0);
+        jroot.getChildren().add(lbl1);
+        
+        Label lbl2 = new Label("main joueur 2:");
+        lbl2.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
+        lbl2.setTranslateY((TILE_HEIGHT+30)*1);
+        jroot.getChildren().add(lbl2);
+        
+        if(nbJoueurs >= 3) {
+        	Label lbl3 = new Label("main joueur 3:");
+        	lbl3.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
+        	lbl3.setTranslateY((TILE_HEIGHT+30)*2);
+        	jroot.getChildren().add(lbl3);
+        }
+        
+        if(nbJoueurs == 4) {
+        	Label lbl4 = new Label("main joueur 4:");
+        	lbl4.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
+        	lbl4.setTranslateY((TILE_HEIGHT+30)*3);
+        	jroot.getChildren().add(lbl4);
+        }
+
+    
+        //lettres
+        
+        // /!\ Il faut encore enlever les lettres piochées du sac /!\  -> remplacer les lignes par celles en commentaire devrait faire l'affaire, à vérifier/arranger
+        // dans les lignes commentées, remplacer "chemin" par le nom de la class où on crée le sac.
+        for(int i=0; i<nbJoueurs; i++) {
+        	int numJ = i+1; // pour éviter 01 11 21 31 quand on fait print(i+1)
+        	System.out.print("Lettres joueur" + numJ + " : " );
+        	for(int j=0; j<7; j++) {
+        		Random lettre_random = new Random();
+        		int nbLettre = lettre_random.nextInt(alphabet.length); // temporaire, à remplacer par la ligne suivante
+        		//int nbLettre = lettre_random.nextInt(chemin.Sac.s_lettre.size())
+				Lettre actu = new Lettre(alphabet[nbLettre], 0); // temporaire, j'ai mis 0 pcq il fallait des points pour créer une lettre, à remplacer par la ligne suivante
+        		// Lettre actu = chemin.Sac.get(nbLettre)
+				tabsLettres[i][j] = actu;
+				//chemin.Sac.remove(actu.ch) 
+        		System.out.print(tabsLettres[i][j]);
+        		
+        		ImageView nextImage = new ImageView(TabImageLettres[nbLettre]);
+        		nextImage.setFitWidth(TILE_WIDTH);
+        		nextImage.setFitHeight(TILE_HEIGHT);
+        		nextImage.setLayoutX( j * TILE_WIDTH );
+        		nextImage.setLayoutY( i * (TILE_HEIGHT + 30) + 30);
+        		jroot.getChildren().add(nextImage);
+        	}
+        	System.out.println();
+        }
+               
+        jscene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				if(event.getTarget().getClass() == ImageView.class) {
+					int x = (int)event.getX();
+					int y = (int)event.getY();
+					
+					int colonne = (int) (x / TILE_WIDTH);
+					int ligne = (int) (y / (30 + TILE_HEIGHT));
+					
+					Lettre id = tabsLettres[ligne][colonne];
+					System.out.println(id.ch);
+					
+					scene.setOnMouseClicked(new EventHandler<MouseEvent>(){
+
+						@Override
+						public void handle(MouseEvent event) {
+							int x2 = (int)event.getX();
+							int y2 = (int)event.getY();
+							int col = (int) (Math.floor(x2 / TILE_WIDTH) + 1);
+							int lig = (int) (Math.floor(y2 / TILE_HEIGHT) + 1);
+							int id2 = mod_plateau[lig - 1][col - 1];
+							System.out.println("Case ID : " + id2);
+							Random image_random = new Random();
+							ImageView test = new ImageView("Scrabble_images/" + id.ch + ".png");
+							test.setFitWidth(TILE_WIDTH);
+							test.setFitHeight(TILE_HEIGHT);
+							test.setLayoutX( (col-1) * TILE_WIDTH );
+							test.setLayoutY( (lig-1) * TILE_HEIGHT );
+							root.getChildren().add(test);
+							
+						}
+						
+					});
+				}
+				
+			}
+        	
+        });
+        
+        joueur.setTitle("main joueurs");
+        joueur.setScene(jscene);
+        
+        joueur.show();
 	}
 	
 	
