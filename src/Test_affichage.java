@@ -18,6 +18,8 @@ import java.util.Random;
 
 public class Test_affichage extends Application{
 	
+	Modele modele;
+	
 	static int screenWidth = (int) Screen.getPrimary().getBounds().getWidth(); 
     static int screenHeight = (int) Screen.getPrimary().getBounds().getHeight(); 
 	
@@ -49,9 +51,26 @@ public class Test_affichage extends Application{
 			{0,0,5,0,0,0,3,0,3,0,0,0,5,0,0},
 			{0,5,0,0,0,4,0,0,0,4,0,0,0,5,0},
 			{6,0,0,3,0,0,0,6,0,0,0,3,0,0,6}};
+	
+	private char plat_char[][] = {
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'}};
 
 	public static void main(String[] args) {
-        Application.launch(Test_affichage.class, args);     
+        launch(args);
         //System.out.println(TILE_WIDTH + " " + TILE_HEIGHT);
         //System.out.println(screenWidth + " " + screenHeight);
     }
@@ -65,6 +84,8 @@ public class Test_affichage extends Application{
 		Scene scene = new Scene(root, screenHeight * 0.9, screenHeight*0.9, Color.LIGHTBLUE);
 		
 		stage.setScene(scene);
+		
+		//this.modele.first_tirage();
 		
 		Image case_vide = new Image("Scrabble_images/Case_vide.png");
 		Image jocker = new Image("Scrabble_images/Jocker.png");
@@ -223,14 +244,41 @@ public class Test_affichage extends Application{
 							int lig = (int) (Math.floor(y2 / TILE_HEIGHT) + 1);
 							int id2 = mod_plateau[lig - 1][col - 1];
 							System.out.println("Case ID : " + id2);
-							Random image_random = new Random();
-							ImageView test = new ImageView("Scrabble_images/" + id.ch + ".png");
-							test.setFitWidth(TILE_WIDTH);
-							test.setFitHeight(TILE_HEIGHT);
-							test.setLayoutX( (col-1) * TILE_WIDTH );
-							test.setLayoutY( (lig-1) * TILE_HEIGHT );
-							root.getChildren().add(test);
 							
+							if(plat_char[7][7] == '/' && lig-1 != 7 && col-1 != 7) {
+								System.out.println("Vous devez commcencer à l'étoile");
+							}
+							//Random image_random = new Random();
+							else if (plat_char[7][7]  != '/' && plat_char[lig-1][col-1] == '/') {
+								ImageView test = new ImageView();
+								if(id.ch != '?') {
+									test = new ImageView("Scrabble_images/" + id.ch + ".png");
+								}
+								else {
+									test = new ImageView("Scrabble_images/Jocker.png");
+								}
+								plat_char[lig-1][col-1] = id.ch;
+								test.setFitWidth(TILE_WIDTH);
+								test.setFitHeight(TILE_HEIGHT);
+								test.setLayoutX( (col-1) * TILE_WIDTH );
+								test.setLayoutY( (lig-1) * TILE_HEIGHT );
+								root.getChildren().add(test);
+							}
+							else if(lig-1 == 7 && col - 1 == 7) {
+								plat_char[7][7] = id.ch;
+								ImageView test = new ImageView();
+								if(id.ch != '?') {
+									test = new ImageView("Scrabble_images/" + id.ch + ".png");
+								}
+								else {
+									test = new ImageView("Scrabble_images/Jocker.png");
+								}
+								test.setFitWidth(TILE_WIDTH);
+								test.setFitHeight(TILE_HEIGHT);
+								test.setLayoutX( (col-1) * TILE_WIDTH );
+								test.setLayoutY( (lig-1) * TILE_HEIGHT );
+								root.getChildren().add(test);
+							}
 						}
 						
 					});
