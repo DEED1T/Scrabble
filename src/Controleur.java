@@ -44,20 +44,25 @@ public class Controleur {
 						
 						Group root = (Group)scene.getRoot();
 						try {
-							modl.lettre_poser(lettre, lig-1, col-1);
+							modl.lettre_poser(lettre, col-1, lig-1);
 							Image image_lettre;
-							if(lettre != '*') {
-								image_lettre = new Image("Scrabble_images/" + lettre +".png");
+							if(modl.plat_char[7][7] == '/' && (lig-1 != 7 && col-1 !=7)) {
+								System.out.println("Vous devez débuter au centre");
 							}
-							else {
-								image_lettre = new Image("Scrabble_images/Jocker.png");
+							else if(modl.plat_char[7][7] != '/') {
+								if(lettre != '*') {
+									image_lettre = new Image("Scrabble_images/" + lettre +".png");
+								}
+								else {
+									image_lettre = new Image("Scrabble_images/Jocker.png");
+								}
+								ImageView image = new ImageView(image_lettre);
+								image.setFitHeight(Vue.TILE_HEIGHT);
+								image.setFitWidth(Vue.TILE_WIDTH);
+								image.setLayoutX( (col-1) * Vue.TILE_WIDTH );
+								image.setLayoutY((lig-1) * Vue.TILE_HEIGHT);
+								root.getChildren().add(image);
 							}
-							ImageView image = new ImageView(image_lettre);
-							image.setFitHeight(Vue.TILE_HEIGHT);
-							image.setFitWidth(Vue.TILE_WIDTH);
-							image.setLayoutX( (col-1) * Vue.TILE_WIDTH );
-							image.setLayoutY((lig-1) * Vue.TILE_HEIGHT);
-							root.getChildren().add(image);
 							
 						} catch (ExceptionDisposition e) {
 							// TODO Auto-generated catch block
