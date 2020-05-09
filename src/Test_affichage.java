@@ -242,6 +242,8 @@ public class Test_affichage extends Application{
 					int ligne = (int) (y / (30 + TILE_HEIGHT));
 					if(ligne == tourJ) { // si on sélectionne bien une lettre dans la main du joueur actuel
 						lettreValide = true;
+						unselect(ligne);
+						selected(ligne, colonne);
 					}
 					else {
 						System.out.println("Veuillez choisir une lettre dans votre main");
@@ -254,6 +256,7 @@ public class Test_affichage extends Application{
 						@Override
 						public void handle(MouseEvent event) {
 							if(lettreValide) {
+								boolean lettrePlacee = false;
 								int x2 = (int)event.getX();
 								int y2 = (int)event.getY();
 								int col = (int) (Math.floor(x2 / TILE_WIDTH) + 1);
@@ -279,6 +282,8 @@ public class Test_affichage extends Application{
 									test.setLayoutX( (col-1) * TILE_WIDTH );
 									test.setLayoutY( (lig-1) * TILE_HEIGHT );
 									root.getChildren().add(test);
+									
+									lettrePlacee = true;
 								}
 								else if(lig-1 == 7 && col - 1 == 7) {
 									plat_char[7][7] = id.ch;
@@ -294,15 +299,83 @@ public class Test_affichage extends Application{
 									test.setLayoutX( (col-1) * TILE_WIDTH );
 									test.setLayoutY( (lig-1) * TILE_HEIGHT );
 									root.getChildren().add(test);
+									
+									lettrePlacee = true;
+								}
+								if(lettrePlacee) {
+									actu(ligne, colonne);
+									lettreValide = false;
 								}
 							}
 							
 							
 						}
 						
+						// Cette fonction est utilisée pour actualisé la main du joueur après avoir placé une lettre
+						private void actu(int ligne, int colonne) {
+							tabsLettres[ligne][colonne] = null;
+							nullLast(tabsLettres[ligne]);
+							
+							
+							
+							for(int col = 0; col < 7; col++) {
+								if(tabsLettres[ligne][col] != null) {
+									//afficher les lettres
+									ImageView newLettre = new ImageView("Scrabble_images/" + tabsLettres[ligne][col].ch + ".png");
+									newLettre.setFitWidth(TILE_WIDTH);
+									newLettre.setFitHeight(TILE_HEIGHT);
+									newLettre.setLayoutX(col * TILE_WIDTH );
+									newLettre.setLayoutY(30);
+									jroot.getChildren().add(newLettre);
+								}
+								else {
+									//rectangle pour couvrir les anciennes lettres
+									Rectangle rectangle = new Rectangle(col * TILE_WIDTH, ligne*(TILE_HEIGHT + 30)+30, TILE_WIDTH, TILE_HEIGHT);
+									jroot.getChildren().add(rectangle);
+								}
+							}
+							
+						}
+						
+						// Cette fonction permet de placer null à la fin du tableau -> avoir les lettres au début
+						private void nullLast(Lettre[] lettres) {
+							boolean encore = true;
+							int i = 0;
+							while(encore){
+								if(lettres[i] == null) {
+									if(i == lettres.length-1) {
+										encore = false;
+									}
+									else {
+										if(lettres[i+1] != null) {
+										lettres[i] = lettres[i+1];
+										lettres[i+1] = null;
+										}
+										else {
+											encore = false;
+										}
+									}
+								}
+								i += 1;
+							}
+						}
+						
+						
 					});
 				}
 				
+			}
+
+			private void unselect(int ligne) {
+				Rectangle rectangle = new Rectangle(0, ligne*(TILE_HEIGHT+30)+20, 7 * TILE_WIDTH, 10); 
+				rectangle.setFill(Color.AZURE);
+				jroot.getChildren().add(rectangle);
+			}
+
+			private void selected(int ligne, int colonne) {
+				Rectangle rectangle = new Rectangle(colonne * TILE_WIDTH, ligne*(TILE_HEIGHT+30)+20, TILE_WIDTH, 10);
+				rectangle.setFill(Color.BLACK);
+				jroot.getChildren().add(rectangle);
 			}
         	
         });
