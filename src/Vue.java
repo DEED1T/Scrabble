@@ -148,6 +148,15 @@ public class Vue implements Observer{
 		
 	}
 	
+	public Button bouton_mot_fini() {
+		Button btnMotFini = new Button("Mot_fini");
+		btnMotFini.setLayoutX(MAP_WIDTH * TILE_WIDTH);
+		btnMotFini.setLayoutY((MAP_HEIGHT * TILE_HEIGHT) - 2 * TILE_HEIGHT);
+		btnMotFini.setPrefSize(2*TILE_WIDTH, TILE_HEIGHT);
+		return btnMotFini;
+		
+	}
+	
 	public Image[] creationImages() {
 		Image case_vide = new Image("Scrabble_images/Case_vide.png");
 		Image mot_x2 = new Image("Scrabble_images/Mot_x2.png");
