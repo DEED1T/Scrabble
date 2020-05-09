@@ -43,7 +43,27 @@ public class Controleur {
 						int id = modl.mod_plateau[lig - 1][col - 1];
 						
 						Group root = (Group)scene.getRoot();
-						if(modl.plat_char[7][7] == '/' && lig-1 != 7 && col-1 != 7) {
+						try {
+							modl.lettre_poser(lettre, lig-1, col-1);
+							Image image_lettre;
+							if(lettre != '*') {
+								image_lettre = new Image("Scrabble_images/" + lettre +".png");
+							}
+							else {
+								image_lettre = new Image("Scrabble_images/Jocker.png");
+							}
+							ImageView image = new ImageView(image_lettre);
+							image.setFitHeight(Vue.TILE_HEIGHT);
+							image.setFitWidth(Vue.TILE_WIDTH);
+							image.setLayoutX( (col-1) * Vue.TILE_WIDTH );
+							image.setLayoutY((lig-1) * Vue.TILE_HEIGHT);
+							root.getChildren().add(image);
+							
+						} catch (ExceptionDisposition e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						/*if(modl.plat_char[7][7] == '/' && lig-1 != 7 && col-1 != 7) {
 							System.out.println("Vous devez commcencer à l'étoile");
 						}
 						//Random image_random = new Random();
@@ -88,6 +108,7 @@ public class Controleur {
 							test.setLayoutX( (col-1) * Vue.TILE_WIDTH );
 							test.setLayoutY( (lig-1) * Vue.TILE_HEIGHT );
 							root.getChildren().add(test);
+<<<<<<< HEAD
 						}
 					try {
 						modl.mot_fini();
@@ -95,12 +116,30 @@ public class Controleur {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+=======
+						}*/
 					}
 			
 				});
-			}	
+			}
 		});
-		
+	}
+	
+	public void mot_fini(Button button) {
+		button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent arg0) {
+				try {
+					modl.mot_fini();
+				} catch (ExceptionDisposition e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			
+		});
 	}
 	
 	public void pioche(Button bouton) {//Si on clique sur le bouton de pioche, appel de la fonction pioche
