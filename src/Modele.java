@@ -8,11 +8,12 @@ import javafx.scene.input.PickResult;
 public class Modele {
 	
 	Sac s = new Sac();
+	Dictionnaire d = new Dictionnaire();
 	ArrayList<Lettre> pieces = s.get();
 	ArrayList<Lettre> alphabet = s.alphabet();
 	ArrayList<Lettre> j1 = new ArrayList<Lettre>();
 	ArrayList<Lettre> mot_en_cours = new ArrayList<Lettre>();
-	Random r = new Random(10);
+	Random r = new Random(127);
 	
 	private enum Id {VIDE,LETTRE_EN_COURS,LETTRE_POSER,LETTREDOUBLE,LETTRETRIPLE,MOTDOUBLE,MOTTRIPLE,CASEDEPART};
 	
@@ -333,9 +334,13 @@ public class Modele {
 					break;
 			}
 		}
-		if(round !=1) {
+		
+		
+		
+		if(round !=1 && longeur!=1) {
 			dis = (long_base == longeur);
 		}
+		
 		
 		if(mot_juste && !dis) {
 			
@@ -363,6 +368,9 @@ public class Modele {
 			throw new ExceptionDisposition();
 		}
 		
+		System.out.println(mot_en_cours);
+		System.out.println(mot_valide(mot_en_cours));
+		
 		mot_en_cours.clear();
 		en_cours = false;
 		first_i = 0;
@@ -373,6 +381,16 @@ public class Modele {
 		dbtp = Id.VIDE;
 		System.out.println(j1);
 		System.out.println("Score "+score_total);
+	}
+	
+	public boolean mot_valide(ArrayList<Lettre> l) {
+		String m = "";
+		for(int i=0;i<l.size();i++) {
+			m+=l.get(i).ch;
+		}
+		
+		return d.contains(m);
+	
 	}
 	
 	public void reset(){
@@ -423,33 +441,15 @@ public class Modele {
 	public static void main(String[] args) throws ExceptionDisposition {
 		Modele m = new Modele();
 		m.first_tirage();
-		m.lettre_poser('p', 7, 7);
-		m.lettre_poser('x', 7, 6);
-		m.lettre_poser('d', 7, 5);
-		m.lettre_poser('n', 7, 4);
+		m.echange('c');
+		m.echange('*');
+		m.lettre_poser('a', 7, 7);
+		m.lettre_poser('m', 7, 6);
+		m.lettre_poser('i', 7, 5);
 		m.mot_fini();
 		m.pioche();
-		m.lettre_poser('j', 5, 5);
-		m.lettre_poser('z', 6, 5);
-		m.lettre_poser('i', 8, 5);
+		m.lettre_poser('s', 6, 7);
 		m.mot_fini();
-		m.pioche();
-		m.lettre_poser('l', 5, 4);
-		m.lettre_poser('r', 5, 6);
-		m.lettre_poser('n', 5, 7);
-		m.mot_fini();
-		m.pioche();
-		m.lettre_poser('d', 4, 7);
-		m.lettre_poser('e', 6, 7);
-		m.lettre_poser('a', 8, 7);
-		m.mot_fini();
-		m.pioche();
-		m.lettre_poser('u', 3, 2);
-		m.lettre_poser('m', 4, 2);
-		m.lettre_poser('r', 5, 2);
-		m.lettre_poser('e', 6, 2);
-		m.mot_fini();
-		m.pioche();
 		
 		
 		

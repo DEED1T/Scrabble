@@ -34,8 +34,7 @@ public class Dictionnaire<E> extends TreeSet<String> {
 	
 	
 	public static void main(String[] args) {
-		
-		
+		Dictionnaire<String> d = new Dictionnaire<String>();		
 	}
 	
 
