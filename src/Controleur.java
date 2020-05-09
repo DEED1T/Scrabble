@@ -47,7 +47,7 @@ public class Controleur {
 							System.out.println("Vous devez commcencer à l'étoile");
 						}
 						//Random image_random = new Random();
-						else if (modl.plat_char[7][7]  != '/' && modl.plat_char[lig-1][col-1] == '/') {
+						else if (modl.plat_char[7][7]  != '/' && modl.plat_char[lig-1][col-1] == '/' && voisins(modl.plat_char, lig-1, col-1) == true) {
 							ImageView test = new ImageView();
 							if(lettre != '*') {
 								test = new ImageView("Scrabble_images/" + lettre + ".png");
@@ -78,7 +78,6 @@ public class Controleur {
 							root.getChildren().add(test);
 						}
 						
-						
 					}
 			
 				});
@@ -98,6 +97,10 @@ public class Controleur {
 			}
 			
 		});
+	}
+	
+	public boolean voisins(char plat_char[][], int lig, int col) {
+		return plat_char[lig-1][col] != '/' || plat_char[lig][col-1] != '/' || plat_char[lig+1][col] != '/' || plat_char[lig][col+1] != '/';
 	}
 
 }
