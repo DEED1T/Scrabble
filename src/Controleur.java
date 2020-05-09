@@ -76,7 +76,7 @@ public class Controleur {
 								test = new ImageView("Scrabble_images/Jocker.png");
 							}
 							modl.plat_char[lig-1][col-1] = lettre;
-							/*try {
+							try {
 								modl.lettre_poser(lettre, lig-1, col-1);
 							} catch (ExceptionDisposition e) {
 								// TODO Auto-generated catch block
@@ -90,7 +90,7 @@ public class Controleur {
 						}
 						else if(lig-1 == 7 && col - 1 == 7) {
 							modl.plat_char[7][7] = lettre;
-							/*try {
+							try {
 								modl.lettre_poser(lettre, 7, 7);
 							} catch (ExceptionDisposition e) {
 								// TODO Auto-generated catch block
@@ -108,6 +108,15 @@ public class Controleur {
 							test.setLayoutX( (col-1) * Vue.TILE_WIDTH );
 							test.setLayoutY( (lig-1) * Vue.TILE_HEIGHT );
 							root.getChildren().add(test);
+<<<<<<< HEAD
+						}
+					try {
+						modl.mot_fini();
+					} catch (ExceptionDisposition e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+=======
 						}*/
 					}
 			

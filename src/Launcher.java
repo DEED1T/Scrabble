@@ -23,7 +23,7 @@ public class Launcher extends Application{
 		Scene scene = vue.getScene();
 		Scene jscene = vue.getMainJoueurs();
 		modele.addObserver(vue);
-		//Controleur ctrl = new Controleur(modele);
+		Controleur ctrl = new Controleur(modele);
 		
 		stage.setScene(scene);
 		Group root = (Group)scene.getRoot();
