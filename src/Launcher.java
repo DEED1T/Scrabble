@@ -28,9 +28,12 @@ public class Launcher extends Application{
 		stage.setScene(scene);
 		Group root = (Group)scene.getRoot();
 		Button boutonPioche = vue.boutonPioche();
+		Button bouton_mot_fini = vue.bouton_mot_fini();
 		root.getChildren().add(boutonPioche);
+		root.getChildren().add(bouton_mot_fini);
 		new Controleur(modele).modif_scene(scene, jscene);
 		new Controleur(modele).pioche(boutonPioche);
+		new Controleur(modele).mot_fini(bouton_mot_fini);
 		stage.setResizable(false);
         stage.setTitle("Scrabble");
         stage.show();
