@@ -17,23 +17,33 @@ public class Launcher extends Application{
 	public void start(Stage stage) throws Exception {
 		Stage joueur = new Stage();
 		
+		//Creation Modele et Vue
 		Modele modele = new Modele();
 		modele.first_tirage();
 		Vue vue = new Vue(modele);
+		
+		//Deux scènes : Main du Joueur et Map
 		Scene scene = vue.getScene();
 		Scene jscene = vue.getMainJoueurs();
+		
 		modele.addObserver(vue);
+		
 		Controleur ctrl = new Controleur(modele);
 		
 		stage.setScene(scene);
 		Group root = (Group)scene.getRoot();
+		
+		//Ajout des boutons
 		Button boutonPioche = vue.boutonPioche();
 		Button bouton_mot_fini = vue.bouton_mot_fini();
 		root.getChildren().add(boutonPioche);
 		root.getChildren().add(bouton_mot_fini);
+		
+		//Ajout des controleurs
 		new Controleur(modele).modif_scene(scene, jscene);
 		new Controleur(modele).pioche(boutonPioche);
 		new Controleur(modele).mot_fini(bouton_mot_fini);
+		
 		stage.setResizable(false);
         stage.setTitle("Scrabble");
         stage.show();
