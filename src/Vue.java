@@ -31,8 +31,8 @@ public class Vue implements Observer{
 	static int MAP_HEIGHT = 15;
 	
 	//Dimensions de chaque Tile (Ici, nos cases du Scrabble)
-	static int TILE_WIDTH = (int) ((screenHeight * 0.8) / 15);
-	static int TILE_HEIGHT = (int) ((screenHeight * 0.8) / 15);
+	static int TILE_WIDTH = (int) ((screenHeight * 0.9) / 15);
+	static int TILE_HEIGHT = (int) ((screenHeight * 0.9) / 15);
 	
 	public static char[] alphabet = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'}; 
 	
@@ -43,7 +43,7 @@ public class Vue implements Observer{
 	public Scene getScene() {
 		
 		Group root = new Group();
-		Scene scene = new Scene(root, screenHeight * 0.9, screenHeight*0.9, Color.LIGHTBLUE);
+		Scene scene = new Scene(root, screenHeight, screenHeight*0.9, Color.LIGHTBLUE);
 		int plateau[][] = modl.mod_plateau;
 		
 		
@@ -142,8 +142,8 @@ public class Vue implements Observer{
 	public Button boutonPioche() {
 		Button btnPioche = new Button("Pioche");
 		btnPioche.setLayoutX(MAP_WIDTH * TILE_WIDTH);
-		btnPioche.setLayoutY(MAP_HEIGHT * TILE_HEIGHT);
-		btnPioche.setPrefSize(100, 50);
+		btnPioche.setLayoutY((MAP_HEIGHT * TILE_HEIGHT) - TILE_HEIGHT);
+		btnPioche.setPrefSize(2*TILE_WIDTH, TILE_HEIGHT);
 		return btnPioche;
 		
 	}
