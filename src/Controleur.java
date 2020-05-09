@@ -38,15 +38,15 @@ public class Controleur {
 						System.out.println("La lettre selectionne est : " + lettre);
 						int x2 = (int)event.getX();
 						int y2 = (int)event.getY();
-						int col = (int) (Math.floor(x2 / Vue.TILE_WIDTH) + 1);
-						int lig = (int) (Math.floor(y2 / Vue.TILE_HEIGHT) + 1);
-						int id = modl.mod_plateau[lig - 1][col - 1];
+						int col = (int) (Math.floor(x2 / Vue.TILE_WIDTH));
+						int lig = (int) (Math.floor(y2 / Vue.TILE_HEIGHT));
+						int id = modl.mod_plateau[lig][col];
 						
 						Group root = (Group)scene.getRoot();
 						try {
-							modl.lettre_poser(lettre, col-1, lig-1);
+							modl.lettre_poser(lettre, lig, col);
 							Image image_lettre;
-							if(modl.plat_char[7][7] == '/' && (lig-1 != 7 && col-1 !=7)) {
+							if(modl.plat_char[7][7] == '/' && (lig != 7 && col !=7)) {
 								System.out.println("Vous devez débuter au centre");
 							}
 							else if(modl.plat_char[7][7] != '/') {
@@ -56,12 +56,17 @@ public class Controleur {
 								else {
 									image_lettre = new Image("Scrabble_images/Jocker.png");
 								}
-								ImageView image = new ImageView(image_lettre);
-								image.setFitHeight(Vue.TILE_HEIGHT);
-								image.setFitWidth(Vue.TILE_WIDTH);
-								image.setLayoutX( (col-1) * Vue.TILE_WIDTH );
-								image.setLayoutY((lig-1) * Vue.TILE_HEIGHT);
-								root.getChildren().add(image);
+								if(modl.plat_char[lig][col] == lettre) {
+									ImageView image = new ImageView(image_lettre);
+									image.setFitHeight(Vue.TILE_HEIGHT);
+									image.setFitWidth(Vue.TILE_WIDTH);
+									image.setLayoutX( col * Vue.TILE_WIDTH );
+									image.setLayoutY( lig * Vue.TILE_HEIGHT);
+									root.getChildren().add(image);
+								}
+								else {
+									System.out.println("Erreur position");
+								}
 							}
 							
 						} catch (ExceptionDisposition e) {
