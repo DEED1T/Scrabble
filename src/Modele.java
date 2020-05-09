@@ -9,18 +9,18 @@ import javafx.scene.input.PickResult;
 public class Modele extends Observable{
 	
 	Sac s = new Sac();
-	Dictionnaire d = new Dictionnaire();
+	Dictionnaire<String> d = new Dictionnaire<String>();
 	ArrayList<Lettre> pieces = s.get();
 	ArrayList<Lettre> alphabet = s.alphabet();
 	ArrayList<Lettre> j1 = new ArrayList<Lettre>();
-	ArrayList<Lettre> mot_en_cours = new ArrayList<Lettre>();
+	ArrayList<Lettre> pose_j1 = new ArrayList<Lettre>();
+	ArrayList<Lettre> mot_j1 = new ArrayList<Lettre>();
 	Random r = new Random(127);
 	
 	private enum Id {VIDE,LETTRE_EN_COURS,LETTRE_POSER,LETTREDOUBLE,LETTRETRIPLE,MOTDOUBLE,MOTTRIPLE,CASEDEPART};
 	
 	private int pivot = 0; 
 	private boolean en_cours = false;
-	private boolean sac_vide = false;
 	private boolean mot_juste = false;
 	public int vide_j1 = 7;
 	private int first_i,first_j;
@@ -32,22 +32,22 @@ public class Modele extends Observable{
 	
 	static private int slots = 7;
 	static int mod_plateau[][] = { {6,0,0,3,0,0,0,6,0,0,0,3,0,0,6},
-											{0,5,0,0,0,4,0,0,0,4,0,0,0,5,0},
-											{0,0,5,0,0,0,3,0,3,0,0,0,5,0,0},
-											{3,0,0,5,0,0,0,3,0,0,0,5,0,0,3},
-											{0,0,0,0,5,0,0,0,0,0,5,0,0,0,0},
-											{0,4,0,0,0,4,0,0,0,4,0,0,0,4,0},
-											{0,0,3,0,0,0,3,0,3,0,0,0,3,0,0},
-											{6,0,0,3,0,0,0,7,0,0,0,3,0,0,6},
-											{0,0,3,0,0,0,3,0,3,0,0,0,3,0,0},
-											{0,4,0,0,0,4,0,0,0,4,0,0,0,4,0},
-											{0,0,0,0,5,0,0,0,0,0,5,0,0,0,0},
-											{3,0,0,5,0,0,0,3,0,0,0,5,0,0,3},
-											{0,0,5,0,0,0,3,0,3,0,0,0,5,0,0},
-											{0,5,0,0,0,4,0,0,0,4,0,0,0,5,0},
-											{6,0,0,3,0,0,0,6,0,0,0,3,0,0,6}};
+									{0,5,0,0,0,4,0,0,0,4,0,0,0,5,0},
+									{0,0,5,0,0,0,3,0,3,0,0,0,5,0,0},
+									{3,0,0,5,0,0,0,3,0,0,0,5,0,0,3},
+									{0,0,0,0,5,0,0,0,0,0,5,0,0,0,0},
+									{0,4,0,0,0,4,0,0,0,4,0,0,0,4,0},
+									{0,0,3,0,0,0,3,0,3,0,0,0,3,0,0},
+									{6,0,0,3,0,0,0,7,0,0,0,3,0,0,6},
+									{0,0,3,0,0,0,3,0,3,0,0,0,3,0,0},
+									{0,4,0,0,0,4,0,0,0,4,0,0,0,4,0},
+									{0,0,0,0,5,0,0,0,0,0,5,0,0,0,0},
+									{3,0,0,5,0,0,0,3,0,0,0,5,0,0,3},
+									{0,0,5,0,0,0,3,0,3,0,0,0,5,0,0},
+									{0,5,0,0,0,4,0,0,0,4,0,0,0,5,0},
+									{6,0,0,3,0,0,0,6,0,0,0,3,0,0,6}};
 
-	private int plateau[][] = { {6,0,0,3,0,0,0,6,0,0,0,3,0,0,6},
+	public int plateau[][] = { {6,0,0,3,0,0,0,6,0,0,0,3,0,0,6},
 								{0,5,0,0,0,4,0,0,0,4,0,0,0,5,0},
 								{0,0,5,0,0,0,3,0,3,0,0,0,5,0,0},
 								{3,0,0,5,0,0,0,3,0,0,0,5,0,0,3},
@@ -63,7 +63,7 @@ public class Modele extends Observable{
 								{0,5,0,0,0,4,0,0,0,4,0,0,0,5,0},
 								{6,0,0,3,0,0,0,6,0,0,0,3,0,0,6}};
 	
-	char plat_char[][] = {	{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+	public char plat_char[][] = {	{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
 									{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
 									{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
 									{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
@@ -147,6 +147,15 @@ public class Modele extends Observable{
 				}
 		}
 		return 0;
+	}
+	
+	public Lettre get_Lettre(char c) {
+		for(int i=0;i<alphabet.size();i++) {
+			if(c == alphabet.get(i).ch) {
+				return alphabet.get(i);
+				}
+		}
+		return null;
 	}
 	
 	public boolean first_turn() {
@@ -234,7 +243,8 @@ public class Modele extends Observable{
 		
 		if(!(first_turn()) || (plateau[ind+1][jnd]!=2 && plateau[ind-1][jnd]!=2 && plateau[ind][jnd+1]!=2 && plateau[ind][jnd-1]!=2)) {
 			if(verif_j1(c)) {
-				mot_en_cours.add(j1.get(pivot));
+				pose_j1.add(j1.get(pivot));
+				mot_j1.add(j1.get(pivot));
 				j1.remove(pivot);
 			}
 			vide_j1 +=1;
@@ -249,10 +259,13 @@ public class Modele extends Observable{
 	}
 	
 	public void mot_fini() throws ExceptionDisposition {
-		int cas = 0;
 		mot_juste = false;
+		boolean lettre_unique = longeur == 1 && round !=1;
+		int cas = 0;
 		int long_base = longeur;
 		boolean dis = false;
+		
+		if(lettre_unique) {longeur+=1;}
 		
 		while(!mot_juste && !(cas>=4)) {
 			switch(cas) {
@@ -264,7 +277,10 @@ public class Modele extends Observable{
 					for(int i=first_j;i<first_j+longeur;i++) {
 						if(plateau[first_i][i]==2) {
 							score_mot+=get_LettrePts(plat_char[first_i][i]);
-							longeur+=1;
+							mot_j1.add(get_Lettre((plat_char[first_i][i])));
+							if(!lettre_unique) {
+								longeur+=1;
+							}
 						}
 						if(plateau[first_i][i]!=1 && plateau[first_i][i]!=2 ) {
 							cas+=1;
@@ -284,7 +300,10 @@ public class Modele extends Observable{
 						
 						if(plateau[first_i][i]==2) {
 							score_mot+=get_LettrePts(plat_char[first_i][i]);
+							mot_j1.add(get_Lettre((plat_char[first_i][i])));
+							if(!lettre_unique) {
 							longeur+=1;
+							}
 						}
 						if(plateau[first_i][i]!=1 && plateau[first_i][i]!=2) {
 							cas+=1;
@@ -303,7 +322,10 @@ public class Modele extends Observable{
 					for(int i=first_i;i<first_i+longeur;i++) {
 						if(plateau[i][first_j]==2) {
 							score_mot+=get_LettrePts(plat_char[i][first_j]);
+							mot_j1.add(get_Lettre((plat_char[i][first_j])));
+							if(!lettre_unique) {
 							longeur+=1;
+							}
 						}
 						if(plateau[i][first_j]!=1 && plateau[i][first_j]!=2) {
 							cas+=1;
@@ -322,7 +344,10 @@ public class Modele extends Observable{
 					for(int i=first_i;i>first_i-longeur;i--) {
 						if(plateau[i][first_j]==2) {
 							score_mot+=get_LettrePts(plat_char[i][first_j]);
+							mot_j1.add(get_Lettre((plat_char[i][first_j])));
+							if(!lettre_unique) {
 							longeur+=1;
+							}
 						}
 						if(plateau[i][first_j]!=1 && plateau[i][first_j]!=2) {
 							cas+=1;
@@ -338,9 +363,11 @@ public class Modele extends Observable{
 		
 		
 		
-		if(round !=1 && longeur!=1) {
+		if(round !=1) {
 			dis = (long_base == longeur);
 		}
+		
+		
 		
 		
 		if(mot_juste && !dis) {
@@ -362,17 +389,17 @@ public class Modele extends Observable{
 			score_total+=score_mot;
 		}
 		else {
-			for(int i=0;i<mot_en_cours.size();i++){
-				j1.add(mot_en_cours.get(i));
+			for(int i=0;i<pose_j1.size();i++){
+				j1.add(pose_j1.get(i));
 			}
 			reset();
 			throw new ExceptionDisposition();
 		}
 		
-		System.out.println(mot_en_cours);
-		System.out.println(mot_valide(mot_en_cours));
+		System.out.println(mot_valide(mot_j1));
 		
-		mot_en_cours.clear();
+		pose_j1.clear();
+		mot_j1.clear();
 		en_cours = false;
 		first_i = 0;
 		first_j = 0;
@@ -385,12 +412,17 @@ public class Modele extends Observable{
 	}
 	
 	public boolean mot_valide(ArrayList<Lettre> l) {
-		String m = "";
+		String md = "";
+		String mg = "";
+		
 		for(int i=0;i<l.size();i++) {
-			m+=l.get(i).ch;
+			mg+=l.get(i).ch;
+		}
+		for(int i=l.size()-1;i>=0;i--) {
+			md+=l.get(i).ch;
 		}
 		
-		return d.contains(m);
+		return d.contains(mg) || d.contains(md);
 	
 	}
 	
