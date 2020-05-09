@@ -18,9 +18,13 @@ import java.util.Random;
 
 public class Test_affichage extends Application{
 	
+	Modele modele;
+	
 	static int screenWidth = (int) Screen.getPrimary().getBounds().getWidth(); 
     static int screenHeight = (int) Screen.getPrimary().getBounds().getHeight(); 
 	
+    //Utilisé pour vérifier si on choisi une lettre dans la bonne main
+    static boolean lettreValide;
 	
 	//Dimensions de la fenêtre
 	static int MAP_WIDTH = 15;
@@ -49,9 +53,26 @@ public class Test_affichage extends Application{
 			{0,0,5,0,0,0,3,0,3,0,0,0,5,0,0},
 			{0,5,0,0,0,4,0,0,0,4,0,0,0,5,0},
 			{6,0,0,3,0,0,0,6,0,0,0,3,0,0,6}};
+	
+	private char plat_char[][] = {
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+			{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'}};
 
 	public static void main(String[] args) {
-        Application.launch(Test_affichage.class, args);     
+        launch(args);
         //System.out.println(TILE_WIDTH + " " + TILE_HEIGHT);
         //System.out.println(screenWidth + " " + screenHeight);
     }
@@ -65,6 +86,8 @@ public class Test_affichage extends Application{
 		Scene scene = new Scene(root, screenHeight * 0.9, screenHeight*0.9, Color.LIGHTBLUE);
 		
 		stage.setScene(scene);
+		
+		//this.modele.first_tirage();
 		
 		Image case_vide = new Image("Scrabble_images/Case_vide.png");
 		Image jocker = new Image("Scrabble_images/Jocker.png");
@@ -176,6 +199,9 @@ public class Test_affichage extends Application{
         
         // /!\ Il faut encore enlever les lettres piochées du sac /!\  -> remplacer les lignes par celles en commentaire devrait faire l'affaire, à vérifier/arranger
         // dans les lignes commentées, remplacer "chemin" par le nom de la class où on crée le sac.
+        
+        // A enlever et remplacer par les fonctions du modèle?
+        
         for(int i=0; i<nbJoueurs; i++) {
         	int numJ = i+1; // pour éviter 01 11 21 31 quand on fait print(i+1)
         	System.out.print("Lettres joueur" + numJ + " : " );
@@ -200,16 +226,26 @@ public class Test_affichage extends Application{
         }
                
         jscene.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
+        	
+        	
 			@Override
 			public void handle(MouseEvent event) {
 				if(event.getTarget().getClass() == ImageView.class) {
+					
+					int tourJ = 0; // temporaire, à rempalcer par le joueur à qui c'est le tour
+					lettreValide = false;
+					
 					int x = (int)event.getX();
 					int y = (int)event.getY();
 					
 					int colonne = (int) (x / TILE_WIDTH);
 					int ligne = (int) (y / (30 + TILE_HEIGHT));
-					
+					if(ligne == tourJ) { // si on sélectionne bien une lettre dans la main du joueur actuel
+						lettreValide = true;
+					}
+					else {
+						System.out.println("Veuillez choisir une lettre dans votre main");
+					}
 					Lettre id = tabsLettres[ligne][colonne];
 					System.out.println(id.ch);
 					
@@ -217,19 +253,50 @@ public class Test_affichage extends Application{
 
 						@Override
 						public void handle(MouseEvent event) {
-							int x2 = (int)event.getX();
-							int y2 = (int)event.getY();
-							int col = (int) (Math.floor(x2 / TILE_WIDTH) + 1);
-							int lig = (int) (Math.floor(y2 / TILE_HEIGHT) + 1);
-							int id2 = mod_plateau[lig - 1][col - 1];
-							System.out.println("Case ID : " + id2);
-							Random image_random = new Random();
-							ImageView test = new ImageView("Scrabble_images/" + id.ch + ".png");
-							test.setFitWidth(TILE_WIDTH);
-							test.setFitHeight(TILE_HEIGHT);
-							test.setLayoutX( (col-1) * TILE_WIDTH );
-							test.setLayoutY( (lig-1) * TILE_HEIGHT );
-							root.getChildren().add(test);
+							if(lettreValide) {
+								int x2 = (int)event.getX();
+								int y2 = (int)event.getY();
+								int col = (int) (Math.floor(x2 / TILE_WIDTH) + 1);
+								int lig = (int) (Math.floor(y2 / TILE_HEIGHT) + 1);
+								int id2 = mod_plateau[lig - 1][col - 1];
+								System.out.println("Case ID : " + id2);
+								
+								if(plat_char[7][7] == '/' && lig-1 != 7 && col-1 != 7) {
+									System.out.println("Vous devez commcencer à l'étoile");
+								}
+								//Random image_random = new Random();
+								else if (plat_char[7][7]  != '/' && plat_char[lig-1][col-1] == '/') {
+									ImageView test = new ImageView();
+									if(id.ch != '?') {
+										test = new ImageView("Scrabble_images/" + id.ch + ".png");
+									}
+									else {
+										test = new ImageView("Scrabble_images/Jocker.png");
+									}
+									plat_char[lig-1][col-1] = id.ch;
+									test.setFitWidth(TILE_WIDTH);
+									test.setFitHeight(TILE_HEIGHT);
+									test.setLayoutX( (col-1) * TILE_WIDTH );
+									test.setLayoutY( (lig-1) * TILE_HEIGHT );
+									root.getChildren().add(test);
+								}
+								else if(lig-1 == 7 && col - 1 == 7) {
+									plat_char[7][7] = id.ch;
+									ImageView test = new ImageView();
+									if(id.ch != '?') {
+										test = new ImageView("Scrabble_images/" + id.ch + ".png");
+									}
+									else {
+										test = new ImageView("Scrabble_images/Jocker.png");
+									}
+									test.setFitWidth(TILE_WIDTH);
+									test.setFitHeight(TILE_HEIGHT);
+									test.setLayoutX( (col-1) * TILE_WIDTH );
+									test.setLayoutY( (lig-1) * TILE_HEIGHT );
+									root.getChildren().add(test);
+								}
+							}
+							
 							
 						}
 						

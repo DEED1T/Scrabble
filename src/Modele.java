@@ -1,11 +1,12 @@
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.Random;
 import java.util.function.LongUnaryOperator;
 import javafx.scene.chart.PieChartBuilder;
 import javafx.scene.input.PickResult;
 
 
-public class Modele {
+public class Modele extends Observable{
 	
 	Sac s = new Sac();
 	Dictionnaire d = new Dictionnaire();
@@ -30,7 +31,7 @@ public class Modele {
 	public int round = 0;
 	
 	static private int slots = 7;
-	static private int mod_plateau[][] = { {6,0,0,3,0,0,0,6,0,0,0,3,0,0,6},
+	static int mod_plateau[][] = { {6,0,0,3,0,0,0,6,0,0,0,3,0,0,6},
 											{0,5,0,0,0,4,0,0,0,4,0,0,0,5,0},
 											{0,0,5,0,0,0,3,0,3,0,0,0,5,0,0},
 											{3,0,0,5,0,0,0,3,0,0,0,5,0,0,3},
@@ -62,7 +63,7 @@ public class Modele {
 								{0,5,0,0,0,4,0,0,0,4,0,0,0,5,0},
 								{6,0,0,3,0,0,0,6,0,0,0,3,0,0,6}};
 	
-	private char plat_char[][] = {	{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
+	char plat_char[][] = {	{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
 									{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
 									{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
 									{'/','/','/','/','/','/','/','/','/','/','/','/','/','/','/'},
