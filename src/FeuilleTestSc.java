@@ -37,7 +37,7 @@ public class FeuilleTestSc {
 		m.lettre_poser('z', 6, 5);
 		m.lettre_poser('i', 8, 5);
 		m.mot_fini();
-		assertEquals(m.score_total, 53);
+		assertEquals(m.score_j1, 53);
 	}
 	
 	@Test ( expected = ExceptionDisposition.class)
