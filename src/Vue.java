@@ -157,6 +157,15 @@ public class Vue implements Observer{
 		
 	}
 	
+	public Button boutonRestart() {
+		Button btnRestart = new Button("Restart");
+		btnRestart.setLayoutX(MAP_WIDTH * TILE_WIDTH);
+		btnRestart.setLayoutY((MAP_HEIGHT * TILE_HEIGHT) - 3 * TILE_HEIGHT);
+		btnRestart.setPrefSize(2*TILE_WIDTH, TILE_HEIGHT);
+		return btnRestart;
+		
+	}
+	
 	public static Image[] creationImages() {
 		Image case_vide = new Image("Scrabble_images/Case_vide.png");
 		Image mot_x2 = new Image("Scrabble_images/Mot_x2.png");

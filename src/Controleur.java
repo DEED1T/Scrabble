@@ -214,7 +214,6 @@ public class Controleur {
 			public void handle(MouseEvent arg0) {
 				try {
 					modl.mot_fini();
-					modl.print_charplat();
 					Image TabImage[] = Vue.creationImages();
 					for(int ligne = 0; ligne < modl.plat_char.length; ligne++) {
 						for(int colonne = 0; colonne < modl.plat_char.length; colonne++) {
@@ -250,6 +249,35 @@ public class Controleur {
 			public void handle(MouseEvent e) {
 				if(e.getTarget().getClass() == Button.class) {
 					modl.pioche();
+				}
+				
+			}
+			
+		});
+	}
+	
+	public void btnRestart(Button btnRestart, Scene scene) {
+		btnRestart.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				modl.resetAll();
+				int plateau[][] = modl.mod_plateau;
+				Image TabImage[] = Vue.creationImages();
+				for(int lig = 0; lig < Vue.MAP_HEIGHT; lig++) {
+					for(int col = 0; col < Vue.MAP_WIDTH; col++) {
+						Group root = (Group)scene.getRoot();
+						int id = plateau[lig][col];
+						Image texture = TabImage[id];
+						if(texture != null) {
+							ImageView image = new ImageView(texture);
+							image.setFitHeight(Vue.TILE_HEIGHT);
+							image.setFitWidth(Vue.TILE_WIDTH);
+							image.setLayoutX( col * Vue.TILE_WIDTH );
+							image.setLayoutY( lig * Vue.TILE_HEIGHT );
+							root.getChildren().add(image);
+						}
+					}
 				}
 				
 			}
