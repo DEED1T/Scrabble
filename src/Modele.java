@@ -21,7 +21,7 @@ public class Modele extends Observable{
 	
 	private int pivot = 0; 
 	private boolean en_cours = false;
-	private boolean mot_juste = false;
+	private boolean disposition_mot = false;
 	public int vide_j1 = 7;
 	private int first_i,first_j;
 	private int longeur=0;
@@ -259,7 +259,7 @@ public class Modele extends Observable{
 	}
 	
 	public void mot_fini() throws ExceptionDisposition {
-		mot_juste = false;
+		disposition_mot = false;
 		boolean lettre_unique = longeur == 1 && round !=1;
 		int cas = 0;
 		int long_base = longeur;
@@ -267,7 +267,7 @@ public class Modele extends Observable{
 		
 		if(lettre_unique) {longeur+=1;}
 		
-		while(!mot_juste && !(cas>=4)) {
+		while(!disposition_mot && !(cas>=4)) {
 			switch(cas) {
 				case 0 :
 					if(first_j+1>=plateau[0].length) {
@@ -288,7 +288,7 @@ public class Modele extends Observable{
 						}
 					}
 					if(cas==0) {
-						mot_juste = true;
+						disposition_mot = true;
 					}
 					break;
 				case 1 :
@@ -311,7 +311,7 @@ public class Modele extends Observable{
 						}
 					}
 					if(cas==1) {
-						mot_juste = true;
+						disposition_mot = true;
 					}
 					break;
 				case 2 : 
@@ -333,7 +333,7 @@ public class Modele extends Observable{
 						}
 					}
 					if(cas==2) {
-						mot_juste = true;
+						disposition_mot = true;
 					}
 					break;
 				case 3 :
@@ -355,7 +355,7 @@ public class Modele extends Observable{
 						}
 					}
 					if(cas==3) {
-						mot_juste = true;
+						disposition_mot = true;
 					}
 					break;
 			}
@@ -370,23 +370,29 @@ public class Modele extends Observable{
 		
 		
 		
-		if(mot_juste && !dis) {
-			
-			for(int i=0;i<plateau.length;i++) {
-				for(int j=0;j<plateau.length;j++) {
-					if(plateau[i][j]==1) {
-						plateau[i][j]=2;
+		if(disposition_mot && !dis) {
+			if(mot_valide(mot_j1)) {
+				for(int i=0;i<plateau.length;i++) {
+					for(int j=0;j<plateau.length;j++) {
+						if(plateau[i][j]==1) {
+							plateau[i][j]=2;
+						}
 					}
 				}
-			}
-			
-			if(dbtp == Id.MOTDOUBLE) {
-				score_mot = score_mot*2;
+				
+				if(dbtp == Id.MOTDOUBLE) {
+					score_mot = score_mot*2;
+					}
+				else if(dbtp == Id.MOTTRIPLE) {
+					score_mot = score_mot*3;
 				}
-			else if(dbtp == Id.MOTTRIPLE) {
-				score_mot = score_mot*3;
+				score_total+=score_mot;
 			}
-			score_total+=score_mot;
+			else {
+				reset();
+				System.out.println("mot n'existe pas");
+				
+			}
 		}
 		else {
 			for(int i=0;i<pose_j1.size();i++){
@@ -394,9 +400,10 @@ public class Modele extends Observable{
 			}
 			reset();
 			throw new ExceptionDisposition();
+			
 		}
 		
-		System.out.println(mot_valide(mot_j1));
+		
 		
 		pose_j1.clear();
 		mot_j1.clear();
@@ -469,7 +476,7 @@ public class Modele extends Observable{
 	
 	
 	public void pioche() {
-		if(mot_juste) {
+		if(disposition_mot) {
 			if(pieces.size()>= 7) {
 				for(int i=0;i<vide_j1;i++) {
 					int out = r.nextInt(pieces.size());
