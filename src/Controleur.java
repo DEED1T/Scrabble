@@ -25,112 +25,60 @@ public class Controleur {
 
 			@Override
 			public void handle(MouseEvent e) {
-				int x = (int)e.getX();
-				int y = (int)e.getY();
-				int colonne = (int) (x/Vue.TILE_WIDTH);
-				int ligne = (int) (x / (30*Vue.TILE_HEIGHT));
-				char lettre = modl.j1.get(colonne).ch;
-				
-				scene.setOnMouseClicked(new EventHandler<MouseEvent>(){
+				if(e.getTarget().getClass() == ImageView.class) {
+					int x = (int)e.getX();
+					int y = (int)e.getY();
+					int colonne = (int) (x/Vue.TILE_WIDTH);
+					int ligne = (int) (x / (30*Vue.TILE_HEIGHT));
+					char lettre = modl.j1.get(colonne).ch;
+					
+					scene.setOnMouseClicked(new EventHandler<MouseEvent>(){
 
-					@Override
-					public void handle(MouseEvent event) {
-						System.out.println("La lettre selectionne est : " + lettre);
-						int x2 = (int)event.getX();
-						int y2 = (int)event.getY();
-						int col = (int) (Math.floor(x2 / Vue.TILE_WIDTH));
-						int lig = (int) (Math.floor(y2 / Vue.TILE_HEIGHT));
-						int id = modl.mod_plateau[lig][col];
-						
-						Group root = (Group)scene.getRoot();
-						try {
-							modl.lettre_poser(lettre, lig, col);
-							Image image_lettre;
-							if(modl.plat_char[7][7] == '/' && (lig != 7 && col !=7)) {
-								System.out.println("Vous devez débuter au centre");
-							}
-							else if(modl.plat_char[7][7] != '/') {
-								if(lettre != '*') {
-									image_lettre = new Image("Scrabble_images/" + lettre +".png");
-								}
-								else {
-									image_lettre = new Image("Scrabble_images/Jocker.png");
-								}
-								if(modl.plat_char[lig][col] == lettre) {
-									ImageView image = new ImageView(image_lettre);
-									image.setFitHeight(Vue.TILE_HEIGHT);
-									image.setFitWidth(Vue.TILE_WIDTH);
-									image.setLayoutX( col * Vue.TILE_WIDTH );
-									image.setLayoutY( lig * Vue.TILE_HEIGHT);
-									root.getChildren().add(image);
-								}
-								else {
-									System.out.println("Erreur position");
-								}
-							}
+						@Override
+						public void handle(MouseEvent event) {
+							System.out.println("La lettre selectionne est : " + lettre);
+							int x2 = (int)event.getX();
+							int y2 = (int)event.getY();
+							int col = (int) (Math.floor(x2 / Vue.TILE_WIDTH));
+							int lig = (int) (Math.floor(y2 / Vue.TILE_HEIGHT));
+							int id = modl.mod_plateau[lig][col];
 							
-						} catch (ExceptionDisposition e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						/*if(modl.plat_char[7][7] == '/' && lig-1 != 7 && col-1 != 7) {
-							System.out.println("Vous devez commcencer à l'étoile");
-						}
-						//Random image_random = new Random();
-						else if (modl.plat_char[7][7]  != '/' && modl.plat_char[lig-1][col-1] == '/' && voisins(modl.plat_char, lig-1, col-1) == true) {
-							ImageView test = new ImageView();
-							if(lettre != '*') {
-								test = new ImageView("Scrabble_images/" + lettre + ".png");
-							}
-							else {
-								test = new ImageView("Scrabble_images/Jocker.png");
-							}
-							modl.plat_char[lig-1][col-1] = lettre;
+							Group root = (Group)scene.getRoot();
 							try {
-								modl.lettre_poser(lettre, lig-1, col-1);
+								modl.lettre_poser(lettre, lig, col);
+								Image image_lettre;
+								if(modl.plat_char[7][7] == '/' && (lig != 7 && col !=7)) {
+									System.out.println("Vous devez débuter au centre");
+								}
+								else if(modl.plat_char[7][7] != '/') {
+									if(lettre != '*') {
+										image_lettre = new Image("Scrabble_images/" + lettre +".png");
+									}
+									else {
+										image_lettre = new Image("Scrabble_images/Jocker.png");
+									}
+									if(modl.plat_char[lig][col] == lettre) {
+										ImageView image = new ImageView(image_lettre);
+										image.setFitHeight(Vue.TILE_HEIGHT);
+										image.setFitWidth(Vue.TILE_WIDTH);
+										image.setLayoutX( col * Vue.TILE_WIDTH );
+										image.setLayoutY( lig * Vue.TILE_HEIGHT);
+										root.getChildren().add(image);
+									}
+									else {
+										System.out.println("Erreur position");
+									}
+								}
+								
 							} catch (ExceptionDisposition e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							test.setFitWidth(Vue.TILE_WIDTH);
-							test.setFitHeight(Vue.TILE_HEIGHT);
-							test.setLayoutX( (col-1) * Vue.TILE_WIDTH );
-							test.setLayoutY( (lig-1) * Vue.TILE_HEIGHT );
-							root.getChildren().add(test);
 						}
-						else if(lig-1 == 7 && col - 1 == 7) {
-							modl.plat_char[7][7] = lettre;
-							try {
-								modl.lettre_poser(lettre, 7, 7);
-							} catch (ExceptionDisposition e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							ImageView test = new ImageView();
-							if(lettre != '*') {
-								test = new ImageView("Scrabble_images/" + lettre + ".png");
-							}
-							else {
-								test = new ImageView("Scrabble_images/Jocker.png");
-							}
-							test.setFitWidth(Vue.TILE_WIDTH);
-							test.setFitHeight(Vue.TILE_HEIGHT);
-							test.setLayoutX( (col-1) * Vue.TILE_WIDTH );
-							test.setLayoutY( (lig-1) * Vue.TILE_HEIGHT );
-							root.getChildren().add(test);
-<<<<<<< HEAD
-						}
-					try {
-						modl.mot_fini();
-					} catch (ExceptionDisposition e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-=======
-						}*/
-					}
-			
-				});
+				
+					});
+				}
+				
 			}
 		});
 	}
