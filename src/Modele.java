@@ -440,7 +440,31 @@ public class Modele extends Observable{
 
 	public void resetAll(){
 		plateau = mod_plateau;
-		round = 0;
+		for(int i=0;i<plat_char.length;i++) {
+			for(int j=0;j<plat_char.length;j++) {
+				plat_char[i][j] = '/';
+			}
+		}
+		
+		pose_j1.clear();
+		mot_j1.clear();
+		j1.clear();
+		en_cours = false;
+		first_i = 0;
+		first_j = 0;
+		longeur = 0;
+		round=0;
+		score_mot = 0;
+		score_total = 0;
+		pivot = 0;
+		dbtp = Id.VIDE;
+		
+		s = new Sac();
+		pieces = s.get();
+		
+		System.out.println(pieces.size());
+		
+		
 	}
 	
 	
@@ -483,7 +507,9 @@ public class Modele extends Observable{
 		m.pioche();
 		m.lettre_poser('s', 6, 7);
 		m.mot_fini();
-		
+		System.out.println(m.pieces.size());
+		m.resetAll();
+		m.first_tirage();
 		
 		
 		
