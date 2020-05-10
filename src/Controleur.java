@@ -29,32 +29,16 @@ public class Controleur {
 			public void handle(MouseEvent e) {
 				if(e.getTarget().getClass() == ImageView.class) {
 					
-					char tabsLettres[][] = new char[2][7]; //2 car on a 2 joueurs
-					for(int i = 0; i < modl.j1.main.size(); i++) {
-					    tabsLettres[0][i] = modl.j1.main.get(i).ch;
-					}
-					/*for(int i = 0; i < modl.j1.size(); i++) { En attente j2
-					    tabsLettres[1][i] = modl.j2.get(i).ch;
-					}*/
-					
-					int tourJ = 0; // temporaire, à rempalcer par le joueur à qui c'est le tour
-					//int tourJ = tour % 2 ( -> nbJoueur)
-					
-					lettreValide = false;
+					actu();
 					
 					int x = (int)e.getX();
 					int y = (int)e.getY();
 					int colonne = (int) (x / Vue.TILE_WIDTH);
 					int ligne   = (int) (y / (30 + Vue.TILE_HEIGHT));
 					
-					if(ligne == tourJ) { // si on sélectionne bien une lettre dans la main du joueur actuel
-						lettreValide = true;
-						unselect(ligne);
-						selected(ligne, colonne);
-					}
-					else {
-						System.out.println("Veuillez choisir une lettre dans votre main");
-					}
+					lettreValide = true;
+					unselect(ligne);
+					selected(ligne, colonne);
 					
 					char lettre = modl.j1.main.get(colonne).ch;
 					
@@ -117,8 +101,8 @@ public class Controleur {
 									}*/
 									if(lettrePlacee) {
 										unselect(ligne);
-										actu(ligne, colonne);
 										lettreValide = false;
+										actu();
 									}
 									
 								} catch (ExceptionDisposition e) {
@@ -129,92 +113,70 @@ public class Controleur {
 							
 						}
 						
-						// Cette fonction est utilisée pour actualisé la main du joueur après avoir placé une lettre
-						private void actu(int ligne, int colonne) {
-							tabsLettres[ligne][colonne] = '9';
-							printTabs(tabsLettres);
-							spaceLast(tabsLettres[ligne]);
-							printTabs(tabsLettres);
-							
-							for(int col = 0; col < 7; col++) {
-								//if(tabsLettres[ligne][col] != '9') {
-								if(verifInteg(tabsLettres[ligne][colonne])) {
-									System.out.println("la lettre que l'on affiche est:"+tabsLettres[ligne][col]);
-									//afficher les lettres
-									ImageView newLettre;
-									if(tabsLettres[ligne][col] == '*') {
-										newLettre = new ImageView("Scrabble_images/Jocker.png");
-									}
-									else {
-										newLettre = new ImageView("Scrabble_images/" + tabsLettres[ligne][col] + ".png");
-									}
-									
-									newLettre.setFitWidth(Vue.TILE_WIDTH);
-									newLettre.setFitHeight(Vue.TILE_HEIGHT);
-									newLettre.setLayoutX(col * Vue.TILE_WIDTH );
-									newLettre.setLayoutY(30);
-									jroot.getChildren().add(newLettre);
-								}
-								else {
-									System.out.println("un rectangle");
-									//rectangle pour couvrir les anciennes lettres
-									Rectangle rectangle = new Rectangle(col * Vue.TILE_WIDTH, ligne*(Vue.TILE_HEIGHT + 30)+30, Vue.TILE_WIDTH, Vue.TILE_HEIGHT);
-									jroot.getChildren().add(rectangle);
-								}
-							}
-							
-						}
-						
-						private boolean verifInteg(char c) {
-							for(int i=0; i<Vue.alphabet.length; i++) {
-								System.out.println(c+" == "+Vue.alphabet[i]+" ?");
-								if(c == Vue.alphabet[i]) {
-									return true;
-								}
-							}
-							
-							return c == '*';
-						}
-
-						private void printTabs(char[][] tabsLettres) {
-							for(int i=0; i<tabsLettres.length; i++) {
-								System.out.print("[");
-								for(int j=0; j<tabsLettres[i].length; j++) {
-									System.out.print(tabsLettres[i][j]);
-								}
-								System.out.println("]");
-							}
-							
-						}
-
-						// Cette fonction permet de placer null à la fin du tableau -> avoir les lettres au début
-						private void spaceLast(char[] lettres) {
-							boolean encore = true;
-							int i = 0;
-							while(encore){
-								if(lettres[i] == '9') {
-									if(i == lettres.length-1) {
-										encore = false;
-									}
-									else {
-										if(lettres[i+1] != '9') {
-											lettres[i] = lettres[i+1];
-											lettres[i+1] = '9';
-										}
-										else {
-											encore = false;
-										}
-									}
-								}
-								i += 1;
-							}
-						}
-						
 					});
 				}
 				
 			}
 
+			//Fonction qui actualise la vue de la main du joueur dont c'est le tour.
+			private void actu() {
+				//System.out.println("newnewnewnewnewnewnewnewnewnewnewnew");
+				char tabsLettres[][] = new char[2][7]; //2 car on a 2 joueurs
+				for(int i = 0; i < modl.j1.main.size(); i++) {
+				    tabsLettres[0][i] = modl.j1.main.get(i).ch;
+				}
+				for(int i = 0; i < modl.j2.main.size(); i++) {
+				    tabsLettres[1][i] = modl.j2.main.get(i).ch;
+				}
+				
+				int tour = (modl.round-1) % 2;
+				int lettreRestantes;
+				
+				if(tour == 0) {
+					lettreRestantes = modl.j1.main.size();
+				}
+				else {
+					lettreRestantes = modl.j2.main.size();
+				}
+				
+				//Afficher les lettres restantes
+				for(int i=0; i<lettreRestantes; i++) {
+					ImageView newLettre;
+					if(tabsLettres[tour][i] == '*') {
+						newLettre = new ImageView("Scrabble_images/Jocker.png");
+					}
+					else {
+						newLettre = new ImageView("Scrabble_images/" + tabsLettres[tour][i] + ".png");
+					}
+					newLettre.setFitWidth(Vue.TILE_WIDTH);
+					newLettre.setFitHeight(Vue.TILE_HEIGHT);
+					newLettre.setLayoutX(i * Vue.TILE_WIDTH );
+					newLettre.setLayoutY(30);
+					//System.out.println("ajout: Scrabble_images/" + tabsLettres[tour][i] + ".png");
+					jroot.getChildren().add(newLettre);
+				}
+				
+				//afficher les rectangles afin de cacher les anciennes lettres
+				for(int i=6; i>lettreRestantes-1; i--) {
+					Rectangle rectangle = new Rectangle(i * Vue.TILE_WIDTH, 30, Vue.TILE_WIDTH, Vue.TILE_HEIGHT);
+					//System.out.println("ajout: rectangle");
+					jroot.getChildren().add(rectangle);
+				}
+			}
+			
+			
+			private void printTabs(char[][] tabsLettres) {
+				for(int i=0; i<tabsLettres.length; i++) {
+					System.out.print("[");
+					for(int j=0; j<tabsLettres[i].length; j++) {
+						System.out.print(tabsLettres[i][j]);
+					}
+					System.out.println("]");
+				}
+				
+			}
+			
+			
 			//Affiche un rectangle au dessus de la lettre sélectionnée
 			private void selected(int ligne, int colonne) {
 				Rectangle rectangle = new Rectangle(colonne * Vue.TILE_WIDTH, ligne*(Vue.TILE_HEIGHT+30)+20, Vue.TILE_WIDTH, 10);
