@@ -30,8 +30,8 @@ public class Controleur {
 				if(e.getTarget().getClass() == ImageView.class) {
 					
 					char tabsLettres[][] = new char[2][7]; //2 car on a 2 joueurs
-					for(int i = 0; i < modl.j1.size(); i++) {
-					    tabsLettres[0][i] = modl.j1.get(i).ch;
+					for(int i = 0; i < modl.j1.main.size(); i++) {
+					    tabsLettres[0][i] = modl.j1.main.get(i).ch;
 					}
 					/*for(int i = 0; i < modl.j1.size(); i++) { En attente j2
 					    tabsLettres[1][i] = modl.j2.get(i).ch;
@@ -56,7 +56,7 @@ public class Controleur {
 						System.out.println("Veuillez choisir une lettre dans votre main");
 					}
 					
-					char lettre = modl.j1.get(colonne).ch;
+					char lettre = modl.j1.main.get(colonne).ch;
 					
 					scene.setOnMouseClicked(new EventHandler<MouseEvent>(){
 						
@@ -272,7 +272,7 @@ public class Controleur {
 			@Override
 			public void handle(MouseEvent e) {
 				if(e.getTarget().getClass() == Button.class) {
-					modl.pioche();
+					modl.pioche(modl.j1);
 				}
 				
 			}

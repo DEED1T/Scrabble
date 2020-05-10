@@ -9,10 +9,12 @@ import javafx.scene.input.PickResult;
 public class Modele extends Observable{
 	
 	Sac s = new Sac();
+	Joueur j1 = new Joueur();
+	Joueur j2 = new Joueur();
+	public Joueur[] liste_j = {j2,j1};
 	Dictionnaire<String> d = new Dictionnaire<String>();
 	ArrayList<Lettre> pieces = s.get();
 	ArrayList<Lettre> alphabet = s.alphabet();
-	ArrayList<Lettre> j1 = new ArrayList<Lettre>();
 	ArrayList<Lettre> pose_courante = new ArrayList<Lettre>();
 	ArrayList<Character> main_courante = new ArrayList<Character>();
 	
@@ -22,12 +24,8 @@ public class Modele extends Observable{
 	private int pivot = 0; 
 	private boolean en_cours = false;
 	private boolean disposition_mot = false;
-	public int vide_j1 = 7;
-	public int vide_j2 = 7;
 	private int first_i,first_j;
 	private int longeur=0;
-	public int score_j1 = 0;
-	public int score_j2 = 0;
 	public int score_mot = 0;
 	private Id dbtp = Id.VIDE;
 	public int round = 0;
@@ -132,9 +130,9 @@ public class Modele extends Observable{
 		return cpt;
 	}
 	
-	public boolean verif_j(char c) {
-		for(int i=0;i<j1.size();i++) {
-			if(c == j1.get(i).ch) {
+	public boolean verif_j(Joueur j, char c) {
+		for(int i=0;i<j.main.size();i++) {
+			if(c == j.main.get(i).ch) {
 				pivot = i;
 				return true;
 			}
@@ -173,31 +171,43 @@ public class Modele extends Observable{
 		round+=1;
 		for(int i=0; i<slots;i++) {
 			int ran = r.nextInt(pieces.size());
-			j1.add(pieces.get(ran));
+			j1.main.add(pieces.get(ran));
 			pieces.remove(ran);
 		}
-		vide_j1 = 0;
+		for(int i=0; i<slots;i++) {
+			int ran = r.nextInt(pieces.size());
+			j2.main.add(pieces.get(ran));
+			pieces.remove(ran);
+		}
+		j1.vide = 0;
+		j2.vide = 0;
+		
+		System.out.println("first tirage j1 "+j1.main);
+		System.out.println("first tirage j2 "+j2.main);
 	}
 	
-	public void echange(char c) {
+	public void echange(Joueur j, char c) {
 		int out = r.nextInt(pieces.size());
-		if(verif_j(c)) {
-			pieces.add(j1.get(pivot));
-			j1.remove(pivot);
-			j1.add(pieces.get(out));
+		if(verif_j(j, c)) {
+			pieces.add(j1.main.get(pivot));
+			j.main.remove(pivot);
+			j.main.add(pieces.get(out));
 		}
 		else {
 			System.out.println("cette lettre ne t'appartient pas");
 		}
 		
+		System.out.println("echange "+j.main);
+		
 	}
 	
-	public void echangeAll() {
-		while(!(j1.isEmpty())) {
-			pieces.add(j1.get(0));
-			j1.remove(0);
+	public void echangeAll(Joueur j) {
+		while(!(j.main.isEmpty())) {
+			pieces.add(j1.main.get(0));
+			j1.main.remove(0);
 			}
-		first_tirage();
+		j.vide = 7;
+		pioche(j);
 	}
 	
 	public int scoreCase(int ind, int jnd) {
@@ -220,6 +230,7 @@ public class Modele extends Observable{
 	
 	public void lettre_poser(char c, int ind, int jnd) throws ExceptionDisposition {
 		int score_lettre = get_LettrePts(c); 
+		int turn = round%2;
 		
 		if(!en_cours) {
 			score_mot+=score_lettre*scoreCase(ind, jnd);
@@ -244,13 +255,15 @@ public class Modele extends Observable{
 		}
 		
 		if(!(first_turn()) || (plateau[ind+1][jnd]!=2 && plateau[ind-1][jnd]!=2 && plateau[ind][jnd+1]!=2 && plateau[ind][jnd-1]!=2)) {
-			if(verif_j(c)) {
-				pose_courante.add(j1.get(pivot));
-				j1.remove(pivot);
+			if(verif_j(liste_j[turn], c)) {
+				pose_courante.add(liste_j[turn].main.get(pivot));
+				liste_j[turn].main.remove(pivot);
 			}
-			vide_j1 +=1;
+			liste_j[turn].vide +=1;
 			longeur +=1;
-			System.out.println(j1);
+			System.out.println("lp j1 "+j1.main);
+			System.out.println("lp j2 "+j2.main);
+			
 		}
 		else {
 			reset();
@@ -265,6 +278,7 @@ public class Modele extends Observable{
 		int cas = 0;
 		int long_base = longeur;
 		boolean dis = false;
+		int turn = round%2;
 		
 		if(lettre_unique) {longeur+=1;}
 		
@@ -402,7 +416,7 @@ public class Modele extends Observable{
 				else if(dbtp == Id.MOTTRIPLE) {
 					score_mot = score_mot*3;
 				}
-				score_j1+=score_mot;
+				liste_j[turn].score+=score_mot;
 			}
 			else {
 				reset();
@@ -412,13 +426,17 @@ public class Modele extends Observable{
 		}
 		else {
 			for(int i=0;i<pose_courante.size();i++){
-				j1.add(pose_courante.get(i));
+				liste_j[turn].main.add(pose_courante.get(i));
 			}
 			reset();
 			throw new ExceptionDisposition();
 			
 		}
 		
+		System.out.println("j1 "+j1.main);
+		System.out.println("j2 "+j2.main);
+		System.out.println("score j1 "+j1.score);
+		System.out.println("score j2 "+j2.score);
 		
 		
 		pose_courante.clear();
@@ -427,7 +445,7 @@ public class Modele extends Observable{
 		first_i = 0;
 		first_j = 0;
 		longeur = 0;
-		round+=1;
+		//round+=1;
 		score_mot = 0;
 		dbtp = Id.VIDE;
 		
@@ -471,17 +489,18 @@ public class Modele extends Observable{
 		
 		pose_courante.clear();
 		main_courante.clear();
-		j1.clear();
 		en_cours = false;
 		first_i = 0;
 		first_j = 0;
 		longeur = 0;
 		round=0;
 		score_mot = 0;
-		score_j1 = 0;
-		score_j2 = 0;
 		pivot = 0;
 		dbtp = Id.VIDE;
+		
+		for(Joueur j : liste_j) {
+			j.reset();
+		}
 		
 		s = new Sac();
 		pieces = s.get();
@@ -491,12 +510,13 @@ public class Modele extends Observable{
 	}
 	
 	
-	public void pioche() {
+	public void pioche(Joueur j) {
+		System.out.println("pioche vide "+j.vide);
 		if(disposition_mot) {
 			if(pieces.size()>= 7) {
-				for(int i=0;i<vide_j1;i++) {
+				for(int i=0;i<j.vide;i++) {
 					int out = r.nextInt(pieces.size());
-					j1.add(pieces.get(out));
+					j.main.add(pieces.get(out));
 					pieces.remove(out);
 				}
 			}
@@ -507,30 +527,36 @@ public class Modele extends Observable{
 				else {
 					for(int i=0;i<pieces.size();i++) {
 						int out = r.nextInt(pieces.size());
-						j1.add(pieces.get(out));
+						j.main.add(pieces.get(out));
 						pieces.remove(out);
 					}
 					
 				}
 			}
 		}
-		vide_j1 = 0;
+		j.vide = 0;
+		round+=1;
+		System.out.println("pioche "+j.main);
 		
 	}
 	
 	public static void main(String[] args) throws ExceptionDisposition {
 		Modele m = new Modele();
 		m.first_tirage();
-		m.echange('c');
-		m.echange('*');
-		m.lettre_poser('a', 7, 7);
-		m.lettre_poser('m', 7, 6);
-		m.lettre_poser('i', 7, 5);
+		m.echange(m.liste_j[m.round%2],'c');
+		m.echange(m.liste_j[m.round%2],'*');
+		m.lettre_poser('d', 7, 7);
+		m.lettre_poser('a', 7, 6);
+		m.lettre_poser('n', 7, 5);
+		m.lettre_poser('s', 7, 4);
 		m.mot_fini();
-		m.pioche();
-		m.lettre_poser('s', 6, 7);
-		m.lettre_poser('t', 8, 7);
+		m.pioche(m.liste_j[m.round%2]);
+		m.lettre_poser('s', 8, 5);
+		m.lettre_poser('e', 6, 5);
+		m.lettre_poser('i', 5, 5);
+		m.lettre_poser('v', 4, 5);
 		m.mot_fini();
+		m.pioche(m.liste_j[m.round%2]);
 		//System.out.println(m.pieces.size());
 		//m.resetAll();
 		//m.first_tirage();

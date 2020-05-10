@@ -113,7 +113,7 @@ public class Vue implements Observer{
         		Random lettre_random = new Random();
         		//int nbLettre = lettre_random.nextInt(alphabet.length); // temporaire, à remplacer par la ligne suivante
         		//int nbLettre = lettre_random.nextInt(chemin.Sac.s_lettre.size())
-				char actu = modl.j1.get(j).ch; // temporaire, j'ai mis 0 pcq il fallait des points pour créer une lettre, à remplacer par la ligne suivante
+				char actu = modl.j1.main.get(j).ch; // temporaire, j'ai mis 0 pcq il fallait des points pour créer une lettre, à remplacer par la ligne suivante
         		// Lettre actu = chemin.Sac.get(nbLettre)
 				tabsLettres[i][j] = actu;
 				//chemin.Sac.remove(actu.ch) 
