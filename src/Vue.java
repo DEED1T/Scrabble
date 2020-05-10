@@ -37,7 +37,7 @@ public class Vue implements Observer{
 	public static char[] alphabet = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'}; 
 	
 	//Chargement des images
-	Image TabImage[] = creationImages();
+	static Image TabImage[] = creationImages();
 	Image TabImageLettre[] = creationImagesLettres();
 	
 	public Scene getScene() {
@@ -157,7 +157,7 @@ public class Vue implements Observer{
 		
 	}
 	
-	public Image[] creationImages() {
+	public static Image[] creationImages() {
 		Image case_vide = new Image("Scrabble_images/Case_vide.png");
 		Image mot_x2 = new Image("Scrabble_images/Mot_x2.png");
 		Image mot_x3 = new Image("Scrabble_images/Mot_x3.png");

@@ -42,7 +42,7 @@ public class Launcher extends Application{
 		//Ajout des controleurs
 		new Controleur(modele).modif_scene(scene, jscene);
 		new Controleur(modele).pioche(boutonPioche);
-		new Controleur(modele).mot_fini(bouton_mot_fini);
+		new Controleur(modele).mot_fini(bouton_mot_fini, scene);
 		
 		stage.setResizable(false);
         stage.setTitle("Scrabble");
