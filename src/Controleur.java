@@ -339,13 +339,18 @@ public class Controleur {
 		});
 	}
 	
-	public void btnEchangeAll(Button button, Group jroot) {
+	public void btnEchangeAll(Button button, Group jroot) {//Ce bouton n'est pas fonctionnel
 		button.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent e) {
 				int tour = (modl.round-1) % 2;
-				modl.echangeAll(modl.j1);
+				if(tour == 0) {
+					modl.echangeAll(modl.j1);
+				}
+				else {
+					modl.echangeAll(modl.j2);
+				}
 				actu(jroot);
 			}
 			
