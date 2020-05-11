@@ -70,7 +70,7 @@ public class Vue implements Observer{
 		int nbJoueurs = 1; // temporaire, à remplacer par le nombre de joueurs
         
         Group jroot = new Group();
-        Scene jscene = new Scene(jroot, TILE_WIDTH*7, (TILE_HEIGHT+30)*nbJoueurs);  
+        Scene jscene = new Scene(jroot, TILE_WIDTH*7, (TILE_HEIGHT * 5)*nbJoueurs);  
         jscene.setFill(Color.AZURE);
         
         char[][] tabsLettres= new char[nbJoueurs][7];
@@ -82,7 +82,7 @@ public class Vue implements Observer{
         lbl1.setTranslateY((TILE_HEIGHT+30)*0);
         jroot.getChildren().add(lbl1);
         
-        Label lbl2 = new Label("main joueur 2:");
+        /*Label lbl2 = new Label("main joueur 2:");
         lbl2.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
         lbl2.setTranslateY((TILE_HEIGHT+30)*1);
         jroot.getChildren().add(lbl2);
@@ -99,7 +99,7 @@ public class Vue implements Observer{
         	lbl4.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
         	lbl4.setTranslateY((TILE_HEIGHT+30)*3);
         	jroot.getChildren().add(lbl4);
-        }
+        }*/
 
     
         //lettres
@@ -172,6 +172,24 @@ public class Vue implements Observer{
 		btnEndTurn.setLayoutY((MAP_HEIGHT * TILE_HEIGHT) - 4 * TILE_HEIGHT);
 		btnEndTurn.setPrefSize(2*TILE_WIDTH, TILE_HEIGHT);
 		return btnEndTurn;
+		
+	}
+	
+	public Button bouton_echangeAll() {
+		Button btnEchange = new Button("Echanger tout");
+		btnEchange.setLayoutX(0);
+		btnEchange.setLayoutY(TILE_HEIGHT * 3);
+		btnEchange.setPrefSize(2*TILE_WIDTH, TILE_HEIGHT);
+		return btnEchange;
+		
+	}
+	
+	public Button bouton_echange() {
+		Button btnEchange = new Button("Echanger");
+		btnEchange.setLayoutX(2 * TILE_WIDTH + 10);
+		btnEchange.setLayoutY(TILE_HEIGHT * 3);
+		btnEchange.setPrefSize(2*TILE_WIDTH, TILE_HEIGHT);
+		return btnEchange;
 		
 	}
 	

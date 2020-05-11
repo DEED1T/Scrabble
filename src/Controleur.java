@@ -327,6 +327,20 @@ public class Controleur {
 		});
 	}
 	
+	public void btnEchangeAll(Button button, Group jroot) {
+		button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent e) {
+				int tour = (modl.round-1) % 2;
+				modl.echangeAll(modl.j1);
+				actu(jroot);
+			}
+			
+		});
+	}
+	
+	
 	public boolean voisins(char plat_char[][], int lig, int col) {
 		return plat_char[lig-1][col] != '/' || plat_char[lig][col-1] != '/' || plat_char[lig+1][col] != '/' || plat_char[lig][col+1] != '/';
 	}
