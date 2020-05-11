@@ -23,6 +23,8 @@ public class Controleur {
 		this.modl  = model;
 	}
 	
+	static Image TabImage[] = Vue.creationImages();
+	
 	public void modif_scene(Scene scene, Scene jscene) throws ExceptionDisposition {
 		jscene.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -226,11 +228,11 @@ public class Controleur {
 				try {
 					modl.mot_fini();
 					actu(jroot);//Actualisation affichage de la main
-					Image TabImage[] = Vue.creationImages();
+					//Image TabImage[] = Vue.creationImages();
 					for(int ligne = 0; ligne < modl.plat_char.length; ligne++) {//Actualisation Map
 						for(int colonne = 0; colonne < modl.plat_char.length; colonne++) {
 							if(modl.plat_char[ligne][colonne] == '/') {
-								int id = modl.mod_plateau[ligne][colonne];
+								int id = Modele.mod_plateau[ligne][colonne];
 								Image texture = TabImage[id];
 								if(texture != null) {
 									ImageView image = new ImageView(texture);
@@ -282,30 +284,35 @@ public class Controleur {
 
 			@Override
 			public void handle(MouseEvent event) {
+				resetMap(scene);
 				modl.resetAll();
 				modl.first_tirage();
-				int plateau[][] = modl.mod_plateau;
-				Image TabImage[] = Vue.creationImages();
-				for(int lig = 0; lig < Vue.MAP_HEIGHT; lig++) {//Actualisation Map
-					for(int col = 0; col < Vue.MAP_WIDTH; col++) {
-						Group root = (Group)scene.getRoot();
-						int id = plateau[lig][col];
-						Image texture = TabImage[id];
-						if(texture != null) {
-							ImageView image = new ImageView(texture);
-							image.setFitHeight(Vue.TILE_HEIGHT);
-							image.setFitWidth(Vue.TILE_WIDTH);
-							image.setLayoutX( col * Vue.TILE_WIDTH );
-							image.setLayoutY( lig * Vue.TILE_HEIGHT );
-							root.getChildren().add(image);
-						}
-					}
-				}
+				//int plateau[][] = modl.mod_plateau;
+				//Image TabImage[] = Vue.creationImages();
+				
 				actu(jroot);//Actualisation affichage de la main
 				
 			}
 			
 		});
+	}
+	
+	public void resetMap(Scene scene) {
+		Group root = (Group)scene.getRoot();
+		for(int lig = 0; lig < Vue.MAP_HEIGHT; lig++) {//Actualisation Map
+			for(int col = 0; col < Vue.MAP_WIDTH; col++) {
+				int id = Modele.mod_plateau[lig][col];
+				Image texture = TabImage[id];
+				if(texture != null) {
+					ImageView image = new ImageView(texture);
+					image.setFitHeight(Vue.TILE_HEIGHT);
+					image.setFitWidth(Vue.TILE_WIDTH);
+					image.setLayoutX( col * Vue.TILE_WIDTH );
+					image.setLayoutY( lig * Vue.TILE_HEIGHT );
+					root.getChildren().add(image);
+				}
+			}
+		}
 	}
 	
 	public void Fin_Tour(Button bouton, Group jroot) {//Si on clique sur le bouton de pioche, appel de la fonction pioche
