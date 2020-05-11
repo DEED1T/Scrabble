@@ -4,11 +4,14 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class Controleur {
 	
@@ -135,14 +138,14 @@ public class Controleur {
 			
 			//Affiche un rectangle au dessus de la lettre sélectionnée
 			private void selected(int ligne, int colonne) {
-				Rectangle rectangle = new Rectangle(colonne * Vue.TILE_WIDTH, ligne*(Vue.TILE_HEIGHT+30)+20, Vue.TILE_WIDTH, 10);
+				Rectangle rectangle = new Rectangle(colonne * Vue.TILE_WIDTH, ligne*(Vue.TILE_HEIGHT+30)+23, Vue.TILE_WIDTH, 7);
 				rectangle.setFill(Color.BLACK);
 				jroot.getChildren().add(rectangle);
 			}
 
 			//supprime le rectangle au dessus de la lettre sélectionnée quand on place ou change de lettre
 			private void unselect(int ligne) {
-				Rectangle rectangle = new Rectangle(0, ligne*(Vue.TILE_HEIGHT+30)+20, 7 * Vue.TILE_WIDTH, 10); 
+				Rectangle rectangle = new Rectangle(0, ligne*(Vue.TILE_HEIGHT+30)+23, 7 * Vue.TILE_WIDTH, 7); 
 				rectangle.setFill(Color.AZURE);
 				jroot.getChildren().add(rectangle);
 			}
@@ -162,12 +165,26 @@ public class Controleur {
 		int tour = (modl.round-1) % 2;
 		int lettreRestantes;
 		
+		Label j; 
+		
 		if(tour == 0) {
 			lettreRestantes = modl.j1.main.size();
+			j = new Label("main joueur 1:");
 		}
 		else {
 			lettreRestantes = modl.j2.main.size();
+			j = new Label("main joueur 2:");
 		}
+		
+		//reset l'affichage
+		Rectangle rectangle = new Rectangle(0, 0, 7*Vue.TILE_WIDTH, 2*Vue.TILE_HEIGHT);
+		rectangle.setFill(Color.AZURE);
+		jroot.getChildren().add(rectangle);
+		
+		//Afficher Main joueur X
+		j.setTranslateY(0);
+		j.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
+		jroot.getChildren().add(j);
 		
 		//Afficher les lettres restantes
 		for(int i=0; i<lettreRestantes; i++) {
@@ -188,9 +205,10 @@ public class Controleur {
 		
 		//afficher les rectangles afin de cacher les anciennes lettres
 		for(int i=6; i>lettreRestantes-1; i--) {
-			Rectangle rectangle = new Rectangle(i * Vue.TILE_WIDTH, 30, Vue.TILE_WIDTH, Vue.TILE_HEIGHT);
-			//System.out.println("ajout: rectangle");
-			jroot.getChildren().add(rectangle);
+			Rectangle caseNoire = new Rectangle(i * Vue.TILE_WIDTH, 30, Vue.TILE_WIDTH, Vue.TILE_HEIGHT);
+			caseNoire.setFill(Color.BLACK);
+			//System.out.println("ajout: caseNoire");
+			jroot.getChildren().add(caseNoire);
 		}
 	}
 	
