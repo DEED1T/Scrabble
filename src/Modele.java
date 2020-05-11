@@ -28,6 +28,7 @@ public class Modele extends Observable{
 	private boolean en_cours = false;
 	private boolean disposition_mot = false;
 	private int first_i,first_j;
+	private int last_i,last_j;
 	private int longeur=0;
 	public int score_mot = 0;
 	private Id dbtp = Id.VIDE;
@@ -186,6 +187,9 @@ public class Modele extends Observable{
 		j1.vide = 0;
 		j2.vide = 0;
 		
+		System.out.println("j1 "+j1.main);
+		System.out.println("j2 "+j2.main);
+		
 		
 		
 		
@@ -251,6 +255,9 @@ public class Modele extends Observable{
 				plateau[ind][jnd] = 1;
 				plat_char[ind][jnd] = c;
 				
+				last_i = ind;
+				last_j = jnd;
+				
 			}
 			else {
 				feed.prompt("placer a coter de la derniere lettre poser");
@@ -278,12 +285,33 @@ public class Modele extends Observable{
 	public void mot_fini() throws ExceptionDisposition {
 		disposition_mot = false;
 		boolean lettre_unique = longeur == 1 && round !=1;
+		boolean bord = false;
 		int cas = 0;
 		int long_base = longeur;
 		boolean dis = false;
 		int turn = round%2;
+		char brd = 0;
+		
+		
+		for(int i=first_i-1;i<=first_i;i++) {
+			for(int j=first_j-1;j<=first_j;j++) {
+				if(plateau[i][j]==2) {
+					bord = true;
+					brd = plat_char[i][j];
+				}
+			}
+		}
+		for(int i=last_i-1;i<=last_i;i++) {
+			for(int j=last_j-1;j<=last_j;j++) {
+				if(plateau[i][j]==2) {
+					bord = true;
+					brd = plat_char[i][j];
+				}
+			}
+		}
 		
 		if(lettre_unique) {longeur+=1;}
+		//if(bord) {longeur+=1;}
 		
 		while(!disposition_mot && !(cas>=4)) {
 			switch(cas) {
@@ -297,6 +325,7 @@ public class Modele extends Observable{
 							main_courante.add(plat_char[first_i][i]);
 						}
 						if(plateau[first_i][i]==2) {
+							bord = false;
 							score_mot+=get_LettrePts(plat_char[first_i][i]);
 							main_courante.add(plat_char[first_i][i]);
 							if(!lettre_unique) {
@@ -306,6 +335,7 @@ public class Modele extends Observable{
 						if(plateau[first_i][i]!=1 && plateau[first_i][i]!=2 ) {
 							cas+=1;
 							main_courante.clear();
+							longeur = long_base;
 							break;
 						}
 					}
@@ -323,6 +353,7 @@ public class Modele extends Observable{
 							main_courante.add(plat_char[first_i][i]);
 						}
 						if(plateau[first_i][i]==2) {
+							bord = false;
 							score_mot+=get_LettrePts(plat_char[first_i][i]);
 							main_courante.add(plat_char[first_i][i]);
 							if(!lettre_unique) {
@@ -332,6 +363,7 @@ public class Modele extends Observable{
 						if(plateau[first_i][i]!=1 && plateau[first_i][i]!=2) {
 							cas+=1;
 							main_courante.clear();
+							longeur = long_base;
 							break;
 						}
 					}
@@ -349,6 +381,7 @@ public class Modele extends Observable{
 							main_courante.add(plat_char[i][first_j]);
 						}
 						if(plateau[i][first_j]==2) {
+							bord = false;
 							score_mot+=get_LettrePts(plat_char[i][first_j]);
 							main_courante.add(plat_char[i][first_j]);
 							if(!lettre_unique) {
@@ -358,6 +391,7 @@ public class Modele extends Observable{
 						if(plateau[i][first_j]!=1 && plateau[i][first_j]!=2) {
 							cas+=1;
 							main_courante.clear();
+							longeur = long_base;
 							break;
 						}
 					}
@@ -375,6 +409,7 @@ public class Modele extends Observable{
 							main_courante.add(plat_char[i][first_j]);
 						}
 						if(plateau[i][first_j]==2) {
+							bord = false;
 							score_mot+=get_LettrePts(plat_char[i][first_j]);
 							main_courante.add(plat_char[i][first_j]);
 							if(!lettre_unique) {
@@ -384,6 +419,7 @@ public class Modele extends Observable{
 						if(plateau[i][first_j]!=1 && plateau[i][first_j]!=2) {
 							cas+=1;
 							main_courante.clear();
+							longeur = long_base;
 							break;
 						}
 					}
@@ -394,13 +430,15 @@ public class Modele extends Observable{
 			}
 		}
 		
-		
+		if(bord) {
+			main_courante.add(brd);
+		}
 		
 		if(round !=1) {
 			dis = (long_base == longeur);
 		}
-		
-		
+		System.out.println("longueur "+longeur);
+		System.out.println("main courante "+ main_courante);
 		
 		if(disposition_mot && !dis) {
 			if(mot_valide(main_courante)) {
@@ -569,10 +607,15 @@ public class Modele extends Observable{
 		m.mot_fini();
 		m.pioche(m.liste_j[m.round%2]);
 		m.next_turn();
-		m.lettre_poser('s', 8, 5);
+		m.lettre_poser('e', 6, 4);
+		m.lettre_poser('s', 5, 4);
+		m.mot_fini();
+		/*m.lettre_poser('s', 8, 5);
 		m.lettre_poser('e', 6, 5);
 		m.lettre_poser('i', 5, 5);
-		m.mot_fini();
+		m.lettre_poser('v', 4, 5);*/
+		
+		//m.mot_fini();
 		//m.pioche(m.liste_j[m.round%2]);
 		//System.out.println(m.pieces.size());
 		//m.resetAll();
