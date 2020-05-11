@@ -57,10 +57,11 @@ public class Controleur {
 					}
 					
 					echange.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
+						
 						@Override
 						public void handle(MouseEvent arg0) {
 							modl.echange(joueur, lettre);
+							actu(jroot);
 						}
 						
 					});

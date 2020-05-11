@@ -476,7 +476,6 @@ public class Modele extends Observable{
 			
 			reset();
 			feed.prompt("Mot mal disposer");
-			throw new ExceptionDisposition();
 			
 		}
 		
@@ -589,6 +588,8 @@ public class Modele extends Observable{
 				}
 			}
 		}
+		
+		feed.prompt("il reste "+s.s_lettres.size()+" pieces dans le sac");
 		j.vide = 0;
 		
 		
