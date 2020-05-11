@@ -186,6 +186,8 @@ public class Modele extends Observable{
 		j2.vide = 0;
 		
 		
+		
+		
 	}
 	
 	public void echange(Joueur j, char c) {
@@ -262,8 +264,7 @@ public class Modele extends Observable{
 			}
 			liste_j[turn].vide +=1;
 			longeur +=1;
-			System.out.println("lp j1 "+j1.main);
-			System.out.println("lp j2 "+j2.main);
+			
 			
 		}
 		else {
@@ -400,7 +401,6 @@ public class Modele extends Observable{
 		
 		
 		
-		
 		if(disposition_mot && !dis) {
 			if(mot_valide(main_courante)) {
 				for(int i=0;i<plateau.length;i++) {
@@ -420,6 +420,10 @@ public class Modele extends Observable{
 				liste_j[turn].score+=score_mot;
 			}
 			else {
+				for(int i=0;i<pose_courante.size();i++){
+					liste_j[turn].main.add(pose_courante.get(i));
+				}
+				
 				reset();
 				feed.prompt("mot n'existe pas");
 				
@@ -429,6 +433,7 @@ public class Modele extends Observable{
 			for(int i=0;i<pose_courante.size();i++){
 				liste_j[turn].main.add(pose_courante.get(i));
 			}
+			
 			reset();
 			feed.prompt("Mot mal disposer");
 			throw new ExceptionDisposition();
@@ -543,7 +548,7 @@ public class Modele extends Observable{
 		}
 		j.vide = 0;
 		
-		System.out.println("pioche "+j.main);
+		
 		
 	}
 	
@@ -562,9 +567,8 @@ public class Modele extends Observable{
 		m.lettre_poser('s', 8, 5);
 		m.lettre_poser('e', 6, 5);
 		m.lettre_poser('i', 5, 5);
-		m.lettre_poser('v', 4, 5);
 		m.mot_fini();
-		m.pioche(m.liste_j[m.round%2]);
+		//m.pioche(m.liste_j[m.round%2]);
 		//System.out.println(m.pieces.size());
 		//m.resetAll();
 		//m.first_tirage();
