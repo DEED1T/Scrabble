@@ -32,6 +32,7 @@ public class Launcher extends Application{
 		
 		stage.setScene(scene);
 		Group root = (Group)scene.getRoot();
+		Group jroot = (Group)jscene.getRoot();
 		
 		//Ajout des boutons
 		Button boutonPioche = vue.boutonPioche();
@@ -43,9 +44,9 @@ public class Launcher extends Application{
 		
 		//Ajout des controleurs
 		new Controleur(modele).modif_scene(scene, jscene);
-		new Controleur(modele).pioche(boutonPioche);
-		new Controleur(modele).mot_fini(bouton_mot_fini, scene);
-		new Controleur(modele).btnRestart(btnRestart, scene);
+		new Controleur(modele).pioche(boutonPioche, jroot);
+		new Controleur(modele).mot_fini(bouton_mot_fini, scene, jroot);
+		new Controleur(modele).btnRestart(btnRestart, scene, jroot);
 		
 		stage.setResizable(false);
         stage.setTitle("Scrabble");

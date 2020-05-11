@@ -29,7 +29,7 @@ public class Controleur {
 			public void handle(MouseEvent e) {
 				if(e.getTarget().getClass() == ImageView.class) {
 					
-					//actu();
+					actu(jroot);
 					
 					int x = (int)e.getX();
 					int y = (int)e.getY();
@@ -37,8 +37,8 @@ public class Controleur {
 					int ligne   = (int) (y / (30 + Vue.TILE_HEIGHT));
 					
 					lettreValide = true;
-					//unselect(ligne);
-					//selected(ligne, colonne);
+					unselect(ligne);
+					selected(ligne, colonne);
 					
 					char lettre = modl.j1.main.get(colonne).ch;
 					
@@ -102,7 +102,7 @@ public class Controleur {
 									if(lettrePlacee) {
 										unselect(ligne);
 										lettreValide = false;
-										actu();
+										actu(jroot);
 									}
 									
 								} catch (ExceptionDisposition e) {
@@ -113,139 +113,12 @@ public class Controleur {
 							
 						}
 						
-
-						// Cette fonction est utilisée pour actualisé la main du joueur après avoir placé une lettre
-						/*private void actu(int ligne, int colonne) {
-							tabsLettres[ligne][colonne] = '9';
-							printTabs(tabsLettres);
-							spaceLast(tabsLettres[ligne]);
-							printTabs(tabsLettres);
-							
-							for(int col = 0; col < 7; col++) {
-								if(tabsLettres[ligne][col] != '9') {
-								//if(verifInteg(tabsLettres[ligne][colonne])) {
-									System.out.println("la lettre que l'on affiche est:"+tabsLettres[ligne][col]);
-									//afficher les lettres
-									ImageView newLettre;
-									if(tabsLettres[ligne][col] == '*') {
-										newLettre = new ImageView("Scrabble_images/Jocker.png");
-									}
-									else {
-										newLettre = new ImageView("Scrabble_images/" + tabsLettres[ligne][col] + ".png");
-									}
-									
-									newLettre.setFitWidth(Vue.TILE_WIDTH);
-									newLettre.setFitHeight(Vue.TILE_HEIGHT);
-									newLettre.setLayoutX(col * Vue.TILE_WIDTH );
-									newLettre.setLayoutY(30);
-									jroot.getChildren().add(newLettre);
-								}
-								else {
-									System.out.println("un rectangle");
-									//rectangle pour couvrir les anciennes lettres
-									Rectangle rectangle = new Rectangle(col * Vue.TILE_WIDTH, ligne*(Vue.TILE_HEIGHT + 30)+30, Vue.TILE_WIDTH, Vue.TILE_HEIGHT);
-									jroot.getChildren().add(rectangle);
-								}
-							}
-							
-						}
-						
-						private boolean verifInteg(char c) {
-							for(int i=0; i<Vue.alphabet.length; i++) {
-								System.out.println(c+" == "+Vue.alphabet[i]+" ?");
-								if(c == Vue.alphabet[i]) {
-									return true;
-								}
-							}
-							
-							return c == '*';
-						}
-
-						private void printTabs(char[][] tabsLettres) {
-							for(int i=0; i<tabsLettres.length; i++) {
-								System.out.print("[");
-								for(int j=0; j<tabsLettres[i].length; j++) {
-									System.out.print(tabsLettres[i][j]);
-								}
-								System.out.println("]");
-							}
-							
-						}
-
-						// Cette fonction permet de placer null à la fin du tableau -> avoir les lettres au début
-						private void spaceLast(char[] lettres) {
-							boolean encore = true;
-							int i = 0;
-							while(encore){
-								if(lettres[i] == '9') {
-									if(i == lettres.length-1) {
-										encore = false;
-									}
-									else {
-										if(lettres[i+1] != '9') {
-											lettres[i] = lettres[i+1];
-											lettres[i+1] = '9';
-										}
-										else {
-											encore = false;
-										}
-									}
-								}
-								i += 1;
-							}
-						}
-						
-
 					});
 				}
 				
-			}*/
+			}
 
 			//Fonction qui actualise la vue de la main du joueur dont c'est le tour.
-			private void actu() {
-				//System.out.println("newnewnewnewnewnewnewnewnewnewnewnew");
-				char tabsLettres[][] = new char[2][7]; //2 car on a 2 joueurs
-				for(int i = 0; i < modl.j1.main.size(); i++) {
-				    tabsLettres[0][i] = modl.j1.main.get(i).ch;
-				}
-				for(int i = 0; i < modl.j2.main.size(); i++) {
-				    tabsLettres[1][i] = modl.j2.main.get(i).ch;
-				}
-				
-				int tour = (modl.round-1) % 2;
-				int lettreRestantes;
-				
-				if(tour == 0) {
-					lettreRestantes = modl.j1.main.size();
-				}
-				else {
-					lettreRestantes = modl.j2.main.size();
-				}
-				
-				//Afficher les lettres restantes
-				for(int i=0; i<lettreRestantes; i++) {
-					ImageView newLettre;
-					if(tabsLettres[tour][i] == '*') {
-						newLettre = new ImageView("Scrabble_images/Jocker.png");
-					}
-					else {
-						newLettre = new ImageView("Scrabble_images/" + tabsLettres[tour][i] + ".png");
-					}
-					newLettre.setFitWidth(Vue.TILE_WIDTH);
-					newLettre.setFitHeight(Vue.TILE_HEIGHT);
-					newLettre.setLayoutX(i * Vue.TILE_WIDTH );
-					newLettre.setLayoutY(30);
-					//System.out.println("ajout: Scrabble_images/" + tabsLettres[tour][i] + ".png");
-					jroot.getChildren().add(newLettre);
-				}
-				
-				//afficher les rectangles afin de cacher les anciennes lettres
-				for(int i=6; i>lettreRestantes-1; i--) {
-					Rectangle rectangle = new Rectangle(i * Vue.TILE_WIDTH, 30, Vue.TILE_WIDTH, Vue.TILE_HEIGHT);
-					//System.out.println("ajout: rectangle");
-					jroot.getChildren().add(rectangle);
-				}
-			}
 			
 			
 			private void printTabs(char[][] tabsLettres) {
@@ -276,15 +149,61 @@ public class Controleur {
 		});
 	}
 	
-	public void mot_fini(Button button, Scene scene) {
+	private void actu(Group jroot) {
+		//System.out.println("newnewnewnewnewnewnewnewnewnewnewnew");
+		char tabsLettres[][] = new char[2][7]; //2 car on a 2 joueurs
+		for(int i = 0; i < modl.j1.main.size(); i++) {
+		    tabsLettres[0][i] = modl.j1.main.get(i).ch;
+		}
+		for(int i = 0; i < modl.j2.main.size(); i++) {
+		    tabsLettres[1][i] = modl.j2.main.get(i).ch;
+		}
+		
+		int tour = (modl.round-1) % 2;
+		int lettreRestantes;
+		
+		if(tour == 0) {
+			lettreRestantes = modl.j1.main.size();
+		}
+		else {
+			lettreRestantes = modl.j2.main.size();
+		}
+		
+		//Afficher les lettres restantes
+		for(int i=0; i<lettreRestantes; i++) {
+			ImageView newLettre;
+			if(tabsLettres[tour][i] == '*') {
+				newLettre = new ImageView("Scrabble_images/Jocker.png");
+			}
+			else {
+				newLettre = new ImageView("Scrabble_images/" + tabsLettres[tour][i] + ".png");
+			}
+			newLettre.setFitWidth(Vue.TILE_WIDTH);
+			newLettre.setFitHeight(Vue.TILE_HEIGHT);
+			newLettre.setLayoutX(i * Vue.TILE_WIDTH );
+			newLettre.setLayoutY(30);
+			//System.out.println("ajout: Scrabble_images/" + tabsLettres[tour][i] + ".png");
+			jroot.getChildren().add(newLettre);
+		}
+		
+		//afficher les rectangles afin de cacher les anciennes lettres
+		for(int i=6; i>lettreRestantes-1; i--) {
+			Rectangle rectangle = new Rectangle(i * Vue.TILE_WIDTH, 30, Vue.TILE_WIDTH, Vue.TILE_HEIGHT);
+			//System.out.println("ajout: rectangle");
+			jroot.getChildren().add(rectangle);
+		}
+	}
+	
+	public void mot_fini(Button button, Scene scene, Group jroot) {
 		button.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent arg0) {
 				try {
 					modl.mot_fini();
+					actu(jroot);//Actualisation affichage de la main
 					Image TabImage[] = Vue.creationImages();
-					for(int ligne = 0; ligne < modl.plat_char.length; ligne++) {
+					for(int ligne = 0; ligne < modl.plat_char.length; ligne++) {//Actualisation Map
 						for(int colonne = 0; colonne < modl.plat_char.length; colonne++) {
 							if(modl.plat_char[ligne][colonne] == '/') {
 								int id = modl.mod_plateau[ligne][colonne];
@@ -297,7 +216,7 @@ public class Controleur {
 									image.setLayoutY( ligne * Vue.TILE_HEIGHT );
 									Group root = (Group)scene.getRoot();
 									root.getChildren().add(image);
-							}
+								}
 							}
 						}
 					}
@@ -311,29 +230,28 @@ public class Controleur {
 		});
 	}
 	
-	public void pioche(Button bouton) {//Si on clique sur le bouton de pioche, appel de la fonction pioche
+	public void pioche(Button bouton, Group jroot) {//Si on clique sur le bouton de pioche, appel de la fonction pioche
 		bouton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent e) {
-				if(e.getTarget().getClass() == Button.class) {
-					modl.pioche(modl.j1);
-				}
-				
+				modl.pioche(modl.j1);
+				actu(jroot);
 			}
 			
 		});
 	}
 	
-	public void btnRestart(Button btnRestart, Scene scene) {
+	public void btnRestart(Button btnRestart, Scene scene, Group jroot) {
 		btnRestart.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent event) {
 				modl.resetAll();
+				modl.first_tirage();
 				int plateau[][] = modl.mod_plateau;
 				Image TabImage[] = Vue.creationImages();
-				for(int lig = 0; lig < Vue.MAP_HEIGHT; lig++) {
+				for(int lig = 0; lig < Vue.MAP_HEIGHT; lig++) {//Actualisation Map
 					for(int col = 0; col < Vue.MAP_WIDTH; col++) {
 						Group root = (Group)scene.getRoot();
 						int id = plateau[lig][col];
@@ -348,6 +266,7 @@ public class Controleur {
 						}
 					}
 				}
+				actu(jroot);//Actualisation affichage de la main
 				
 			}
 			
@@ -357,14 +276,5 @@ public class Controleur {
 	public boolean voisins(char plat_char[][], int lig, int col) {
 		return plat_char[lig-1][col] != '/' || plat_char[lig][col-1] != '/' || plat_char[lig+1][col] != '/' || plat_char[lig][col+1] != '/';
 	}
-			}
-		}
-	}
 
-
-		
-	
-			
-			
-			
-			
+}
