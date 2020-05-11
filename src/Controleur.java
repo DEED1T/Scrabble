@@ -220,7 +220,7 @@ public class Controleur {
 							}
 						}
 					}
-					modl.next_turn();
+					
 				} catch (ExceptionDisposition e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
