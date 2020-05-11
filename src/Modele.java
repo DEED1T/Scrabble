@@ -32,6 +32,7 @@ public class Modele extends Observable{
 	public int score_mot = 0;
 	private Id dbtp = Id.VIDE;
 	public int round = 0;
+	public boolean leMotEstBon;
 	
 	
 	static private int slots = 7;
@@ -418,6 +419,7 @@ public class Modele extends Observable{
 					score_mot = score_mot*3;
 				}
 				liste_j[turn].score+=score_mot;
+				next_turn();
 			}
 			else {
 				for(int i=0;i<pose_courante.size();i++){
@@ -440,7 +442,7 @@ public class Modele extends Observable{
 			
 		}
 		
-		feed.prompt("Le score de "+liste_j_noms[round%2]+" est de "+liste_j[round%2].score);
+		
 		
 		
 		pose_courante.clear();
@@ -470,11 +472,9 @@ public class Modele extends Observable{
 		if(d.contains(mg)) {feed.prompt(liste_j_noms[round%2]+" à jouer le mot '"+mg+"'");}
 		if(d.contains(md)) {feed.prompt(liste_j_noms[round%2]+" à jouer le mot '"+md+"'");}
 		
-		if (d.contains(mg) || d.contains(md)) {
-			next_turn();
-			return true;
-		}
-		return false;
+		return (d.contains(mg) || d.contains(md)); 
+			
+	
 	
 	}
 	
@@ -522,6 +522,7 @@ public class Modele extends Observable{
 	
 	
 	public void next_turn() {
+		feed.prompt("Le score de "+liste_j_noms[round%2]+" est de "+liste_j[round%2].score);
 		round+=1;
 		feed.prompt("à "+liste_j_noms[round%2]+" de jouer !");
 	}
