@@ -264,7 +264,8 @@ public class Controleur {
 
 			@Override
 			public void handle(MouseEvent e) {
-				if(modl.round % 2 != 0) {
+				int tour = (modl.round-1) % 2;
+				if(tour == 0) {
 					modl.pioche(modl.j1);
 				}
 				else {
