@@ -166,6 +166,15 @@ public class Vue implements Observer{
 		
 	}
 	
+	public Button bouton_fin_tour() {
+		Button btnEndTurn = new Button("Fin Tour");
+		btnEndTurn.setLayoutX(MAP_WIDTH * TILE_WIDTH);
+		btnEndTurn.setLayoutY((MAP_HEIGHT * TILE_HEIGHT) - 4 * TILE_HEIGHT);
+		btnEndTurn.setPrefSize(2*TILE_WIDTH, TILE_HEIGHT);
+		return btnEndTurn;
+		
+	}
+	
 	public static Image[] creationImages() {
 		Image case_vide = new Image("Scrabble_images/Case_vide.png");
 		Image mot_x2 = new Image("Scrabble_images/Mot_x2.png");

@@ -38,15 +38,18 @@ public class Launcher extends Application{
 		Button boutonPioche = vue.boutonPioche();
 		Button bouton_mot_fini = vue.bouton_mot_fini();
 		Button btnRestart = vue.boutonRestart();
+		Button btnFinTour = vue.bouton_fin_tour();
 		root.getChildren().add(boutonPioche);
 		root.getChildren().add(bouton_mot_fini);
 		root.getChildren().add(btnRestart);
+		root.getChildren().add(btnFinTour);
 		
 		//Ajout des controleurs
 		new Controleur(modele).modif_scene(scene, jscene);
 		new Controleur(modele).pioche(boutonPioche, jroot);
 		new Controleur(modele).mot_fini(bouton_mot_fini, scene, jroot);
 		new Controleur(modele).btnRestart(btnRestart, scene, jroot);
+		new Controleur(modele).Fin_Tour(btnFinTour, jroot);
 		
 		stage.setResizable(false);
         stage.setTitle("Scrabble");
