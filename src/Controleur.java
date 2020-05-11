@@ -220,7 +220,11 @@ public class Controleur {
 							}
 						}
 					}
+
 					
+
+					//modl.next_turn();
+
 				} catch (ExceptionDisposition e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -269,6 +273,18 @@ public class Controleur {
 				}
 				actu(jroot);//Actualisation affichage de la main
 				
+			}
+			
+		});
+	}
+	
+	public void Fin_Tour(Button bouton, Group jroot) {//Si on clique sur le bouton de pioche, appel de la fonction pioche
+		bouton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent e) {
+				modl.next_turn();
+				actu(jroot);
 			}
 			
 		});
