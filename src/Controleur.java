@@ -240,7 +240,12 @@ public class Controleur {
 
 			@Override
 			public void handle(MouseEvent e) {
-				modl.pioche(modl.j1);
+				if(modl.round % 2 != 0) {
+					modl.pioche(modl.j1);
+				}
+				else {
+					modl.pioche(modl.j2);
+				}
 				actu(jroot);
 			}
 			
