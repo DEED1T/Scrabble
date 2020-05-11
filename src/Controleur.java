@@ -43,7 +43,13 @@ public class Controleur {
 					unselect(ligne);
 					selected(ligne, colonne);
 					
-					char lettre = modl.j1.main.get(colonne).ch;
+					char lettre;
+					if(modl.round % 2 != 0) {
+						lettre = modl.j1.main.get(colonne).ch;
+					}
+					else {
+						lettre = modl.j2.main.get(colonne).ch;
+					}
 					
 					scene.setOnMouseClicked(new EventHandler<MouseEvent>(){
 						
