@@ -210,12 +210,12 @@ public class Controleur {
 		}
 		
 		//afficher les rectangles afin de cacher les anciennes lettres
-		for(int i=6; i>lettreRestantes-1; i--) {
+		/*for(int i=6; i>lettreRestantes-1; i--) {
 			Rectangle caseNoire = new Rectangle(i * Vue.TILE_WIDTH, 30, Vue.TILE_WIDTH, Vue.TILE_HEIGHT);
 			caseNoire.setFill(Color.BLACK);
 			//System.out.println("ajout: caseNoire");
 			jroot.getChildren().add(caseNoire);
-		}
+		}*/
 	}
 	
 	public void mot_fini(Button button, Scene scene, Group jroot) {
