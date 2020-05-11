@@ -4,11 +4,14 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class Controleur {
 	
@@ -19,6 +22,8 @@ public class Controleur {
 	public Controleur(Modele model){
 		this.modl  = model;
 	}
+	
+	static Image TabImage[] = Vue.creationImages();
 	
 	public void modif_scene(Scene scene, Scene jscene) throws ExceptionDisposition {
 		jscene.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -40,7 +45,13 @@ public class Controleur {
 					unselect(ligne);
 					selected(ligne, colonne);
 					
-					char lettre = modl.j1.main.get(colonne).ch;
+					char lettre;
+					if(modl.round % 2 != 0) {
+						lettre = modl.j1.main.get(colonne).ch;
+					}
+					else {
+						lettre = modl.j2.main.get(colonne).ch;
+					}
 					
 					scene.setOnMouseClicked(new EventHandler<MouseEvent>(){
 						
@@ -135,14 +146,14 @@ public class Controleur {
 			
 			//Affiche un rectangle au dessus de la lettre sélectionnée
 			private void selected(int ligne, int colonne) {
-				Rectangle rectangle = new Rectangle(colonne * Vue.TILE_WIDTH, ligne*(Vue.TILE_HEIGHT+30)+20, Vue.TILE_WIDTH, 10);
+				Rectangle rectangle = new Rectangle(colonne * Vue.TILE_WIDTH, ligne*(Vue.TILE_HEIGHT+30)+23, Vue.TILE_WIDTH, 7);
 				rectangle.setFill(Color.BLACK);
 				jroot.getChildren().add(rectangle);
 			}
 
 			//supprime le rectangle au dessus de la lettre sélectionnée quand on place ou change de lettre
 			private void unselect(int ligne) {
-				Rectangle rectangle = new Rectangle(0, ligne*(Vue.TILE_HEIGHT+30)+20, 7 * Vue.TILE_WIDTH, 10); 
+				Rectangle rectangle = new Rectangle(0, ligne*(Vue.TILE_HEIGHT+30)+23, 7 * Vue.TILE_WIDTH, 7); 
 				rectangle.setFill(Color.AZURE);
 				jroot.getChildren().add(rectangle);
 			}
@@ -162,12 +173,26 @@ public class Controleur {
 		int tour = (modl.round-1) % 2;
 		int lettreRestantes;
 		
+		Label j; 
+		
 		if(tour == 0) {
 			lettreRestantes = modl.j1.main.size();
+			j = new Label("main joueur 1:");
 		}
 		else {
 			lettreRestantes = modl.j2.main.size();
+			j = new Label("main joueur 2:");
 		}
+		
+		//reset l'affichage
+		Rectangle rectangle = new Rectangle(0, 0, 7*Vue.TILE_WIDTH, 2*Vue.TILE_HEIGHT);
+		rectangle.setFill(Color.AZURE);
+		jroot.getChildren().add(rectangle);
+		
+		//Afficher Main joueur X
+		j.setTranslateY(0);
+		j.setFont(Font.font("Serif", FontWeight.NORMAL, 20));
+		jroot.getChildren().add(j);
 		
 		//Afficher les lettres restantes
 		for(int i=0; i<lettreRestantes; i++) {
@@ -187,11 +212,12 @@ public class Controleur {
 		}
 		
 		//afficher les rectangles afin de cacher les anciennes lettres
-		for(int i=6; i>lettreRestantes-1; i--) {
-			Rectangle rectangle = new Rectangle(i * Vue.TILE_WIDTH, 30, Vue.TILE_WIDTH, Vue.TILE_HEIGHT);
-			//System.out.println("ajout: rectangle");
-			jroot.getChildren().add(rectangle);
-		}
+		/*for(int i=6; i>lettreRestantes-1; i--) {
+			Rectangle caseNoire = new Rectangle(i * Vue.TILE_WIDTH, 30, Vue.TILE_WIDTH, Vue.TILE_HEIGHT);
+			caseNoire.setFill(Color.BLACK);
+			//System.out.println("ajout: caseNoire");
+			jroot.getChildren().add(caseNoire);
+		}*/
 	}
 	
 	public void mot_fini(Button button, Scene scene, Group jroot) {
@@ -202,11 +228,11 @@ public class Controleur {
 				try {
 					modl.mot_fini();
 					actu(jroot);//Actualisation affichage de la main
-					Image TabImage[] = Vue.creationImages();
+					//Image TabImage[] = Vue.creationImages();
 					for(int ligne = 0; ligne < modl.plat_char.length; ligne++) {//Actualisation Map
 						for(int colonne = 0; colonne < modl.plat_char.length; colonne++) {
 							if(modl.plat_char[ligne][colonne] == '/') {
-								int id = modl.mod_plateau[ligne][colonne];
+								int id = Modele.mod_plateau[ligne][colonne];
 								Image texture = TabImage[id];
 								if(texture != null) {
 									ImageView image = new ImageView(texture);
@@ -240,7 +266,8 @@ public class Controleur {
 
 			@Override
 			public void handle(MouseEvent e) {
-				if(modl.round % 2 != 0) {
+				int tour = (modl.round-1) % 2;
+				if(tour == 0) {
 					modl.pioche(modl.j1);
 				}
 				else {
@@ -257,30 +284,35 @@ public class Controleur {
 
 			@Override
 			public void handle(MouseEvent event) {
+				resetMap(scene);
 				modl.resetAll();
 				modl.first_tirage();
-				int plateau[][] = modl.mod_plateau;
-				Image TabImage[] = Vue.creationImages();
-				for(int lig = 0; lig < Vue.MAP_HEIGHT; lig++) {//Actualisation Map
-					for(int col = 0; col < Vue.MAP_WIDTH; col++) {
-						Group root = (Group)scene.getRoot();
-						int id = plateau[lig][col];
-						Image texture = TabImage[id];
-						if(texture != null) {
-							ImageView image = new ImageView(texture);
-							image.setFitHeight(Vue.TILE_HEIGHT);
-							image.setFitWidth(Vue.TILE_WIDTH);
-							image.setLayoutX( col * Vue.TILE_WIDTH );
-							image.setLayoutY( lig * Vue.TILE_HEIGHT );
-							root.getChildren().add(image);
-						}
-					}
-				}
+				//int plateau[][] = modl.mod_plateau;
+				//Image TabImage[] = Vue.creationImages();
+				
 				actu(jroot);//Actualisation affichage de la main
 				
 			}
 			
 		});
+	}
+	
+	public void resetMap(Scene scene) {
+		Group root = (Group)scene.getRoot();
+		for(int lig = 0; lig < Vue.MAP_HEIGHT; lig++) {//Actualisation Map
+			for(int col = 0; col < Vue.MAP_WIDTH; col++) {
+				int id = Modele.mod_plateau[lig][col];
+				Image texture = TabImage[id];
+				if(texture != null) {
+					ImageView image = new ImageView(texture);
+					image.setFitHeight(Vue.TILE_HEIGHT);
+					image.setFitWidth(Vue.TILE_WIDTH);
+					image.setLayoutX( col * Vue.TILE_WIDTH );
+					image.setLayoutY( lig * Vue.TILE_HEIGHT );
+					root.getChildren().add(image);
+				}
+			}
+		}
 	}
 	
 	public void Fin_Tour(Button bouton, Group jroot) {//Si on clique sur le bouton de pioche, appel de la fonction pioche
