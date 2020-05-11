@@ -40,15 +40,18 @@ public class Launcher extends Application{
 		Button btnRestart = vue.boutonRestart();
 		Button btnFinTour = vue.bouton_fin_tour();
 		Button btnEchangeAll = vue.bouton_echangeAll();
+		Button btnEchange = vue.bouton_echange();
+		
 		root.getChildren().add(boutonPioche);
 		root.getChildren().add(bouton_mot_fini);
 		root.getChildren().add(btnRestart);
 		root.getChildren().add(btnFinTour);
 		
+		jroot.getChildren().add(btnEchange);
 		jroot.getChildren().add(btnEchangeAll);
 		
 		//Ajout des controleurs
-		new Controleur(modele).modif_scene(scene, jscene);
+		new Controleur(modele).modif_scene(scene, jscene, btnEchange);
 		new Controleur(modele).pioche(boutonPioche, jroot);
 		new Controleur(modele).mot_fini(bouton_mot_fini, scene, jroot);
 		new Controleur(modele).btnRestart(btnRestart, scene, jroot);

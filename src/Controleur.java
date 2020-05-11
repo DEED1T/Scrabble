@@ -25,7 +25,7 @@ public class Controleur {
 	
 	static Image TabImage[] = Vue.creationImages();
 	
-	public void modif_scene(Scene scene, Scene jscene) throws ExceptionDisposition {
+	public void modif_scene(Scene scene, Scene jscene, Button echange) throws ExceptionDisposition {
 		jscene.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			Group jroot = (Group)jscene.getRoot();
@@ -46,12 +46,24 @@ public class Controleur {
 					selected(ligne, colonne);
 					
 					char lettre;
+					Joueur joueur;
 					if(modl.round % 2 != 0) {
 						lettre = modl.j1.main.get(colonne).ch;
+						joueur = modl.j1;
 					}
 					else {
 						lettre = modl.j2.main.get(colonne).ch;
+						joueur = modl.j2;
 					}
+					
+					echange.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+						@Override
+						public void handle(MouseEvent arg0) {
+							modl.echange(joueur, lettre);
+						}
+						
+					});
 					
 					scene.setOnMouseClicked(new EventHandler<MouseEvent>(){
 						
