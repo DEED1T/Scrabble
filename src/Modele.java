@@ -470,7 +470,11 @@ public class Modele extends Observable{
 		if(d.contains(mg)) {feed.prompt(liste_j_noms[round%2]+" à jouer le mot '"+mg+"'");}
 		if(d.contains(md)) {feed.prompt(liste_j_noms[round%2]+" à jouer le mot '"+md+"'");}
 		
-		return d.contains(mg) || d.contains(md);
+		if (d.contains(mg) || d.contains(md)) {
+			next_turn();
+			return true;
+		}
+		return false;
 	
 	}
 	
