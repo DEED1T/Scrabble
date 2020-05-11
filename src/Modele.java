@@ -4,14 +4,17 @@ import java.util.Random;
 import java.util.function.LongUnaryOperator;
 import javafx.scene.chart.PieChartBuilder;
 import javafx.scene.input.PickResult;
+import javafx.scene.web.PromptData;
 
 
 public class Modele extends Observable{
 	
+	Feed feed = new Feed();
 	Sac s = new Sac();
 	Joueur j1 = new Joueur();
 	Joueur j2 = new Joueur();
 	public Joueur[] liste_j = {j2,j1};
+	private String[] liste_j_noms = {"j2","j1"};
 	Dictionnaire<String> d = new Dictionnaire<String>();
 	ArrayList<Lettre> pieces = s.get();
 	ArrayList<Lettre> alphabet = s.alphabet();
@@ -182,8 +185,7 @@ public class Modele extends Observable{
 		j1.vide = 0;
 		j2.vide = 0;
 		
-		System.out.println("first tirage j1 "+j1.main);
-		System.out.println("first tirage j2 "+j2.main);
+		
 	}
 	
 	public void echange(Joueur j, char c) {
@@ -194,10 +196,9 @@ public class Modele extends Observable{
 			j.main.add(pieces.get(out));
 		}
 		else {
-			System.out.println("cette lettre ne t'appartient pas");
+			feed.prompt("cette lettre ne t'appartient pas");
 		}
 		
-		System.out.println("echange "+j.main);
 		
 	}
 	
@@ -249,7 +250,7 @@ public class Modele extends Observable{
 				
 			}
 			else {
-				System.out.println("placer a coter de la derniï¿½re lettre poser");
+				feed.prompt("placer a coter de la derniere lettre poser");
 				reset();
 			}
 		}
@@ -420,7 +421,7 @@ public class Modele extends Observable{
 			}
 			else {
 				reset();
-				System.out.println("mot n'existe pas");
+				feed.prompt("mot n'existe pas");
 				
 			}
 		}
@@ -429,14 +430,12 @@ public class Modele extends Observable{
 				liste_j[turn].main.add(pose_courante.get(i));
 			}
 			reset();
+			feed.prompt("Mot mal disposer");
 			throw new ExceptionDisposition();
 			
 		}
 		
-		System.out.println("j1 "+j1.main);
-		System.out.println("j2 "+j2.main);
-		System.out.println("score j1 "+j1.score);
-		System.out.println("score j2 "+j2.score);
+		feed.prompt("Le score de "+liste_j_noms[round%2]+" est de "+liste_j[round%2].score);
 		
 		
 		pose_courante.clear();
@@ -462,6 +461,9 @@ public class Modele extends Observable{
 		for(int i=l.size()-1;i>=0;i--) {
 			md+=l.get(i);
 		}
+		
+		if(d.contains(mg)) {feed.prompt(liste_j_noms[round%2]+" à jouer le mot '"+mg+"'");}
+		if(d.contains(md)) {feed.prompt(liste_j_noms[round%2]+" à jouer le mot '"+md+"'");}
 		
 		return d.contains(mg) || d.contains(md);
 	
@@ -510,8 +512,13 @@ public class Modele extends Observable{
 	}
 	
 	
+	public void next_turn() {
+		round+=1;
+		feed.prompt("à "+liste_j_noms[round%2]+" de jouer !");
+	}
+	
 	public void pioche(Joueur j) {
-		System.out.println("pioche vide "+j.vide);
+		
 		if(disposition_mot) {
 			if(pieces.size()>= 7) {
 				for(int i=0;i<j.vide;i++) {
@@ -522,7 +529,7 @@ public class Modele extends Observable{
 			}
 			else{
 				if(pieces.size()==0) {
-					System.out.println("plus de pieces !");
+					feed.prompt("plus de pieces !");
 				}
 				else {
 					for(int i=0;i<pieces.size();i++) {
@@ -535,7 +542,7 @@ public class Modele extends Observable{
 			}
 		}
 		j.vide = 0;
-		round+=1;
+		
 		System.out.println("pioche "+j.main);
 		
 	}
@@ -551,6 +558,7 @@ public class Modele extends Observable{
 		m.lettre_poser('s', 7, 4);
 		m.mot_fini();
 		m.pioche(m.liste_j[m.round%2]);
+		m.next_turn();
 		m.lettre_poser('s', 8, 5);
 		m.lettre_poser('e', 6, 5);
 		m.lettre_poser('i', 5, 5);

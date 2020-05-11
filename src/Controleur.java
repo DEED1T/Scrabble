@@ -137,8 +137,8 @@ public class Controleur {
 							printTabs(tabsLettres);
 							
 							for(int col = 0; col < 7; col++) {
-								//if(tabsLettres[ligne][col] != '9') {
-								if(verifInteg(tabsLettres[ligne][colonne])) {
+								if(tabsLettres[ligne][col] != '9') {
+								//if(verifInteg(tabsLettres[ligne][colonne])) {
 									System.out.println("la lettre que l'on affiche est:"+tabsLettres[ligne][col]);
 									//afficher les lettres
 									ImageView newLettre;
